@@ -1,0 +1,228 @@
+[09:36:22] [ServerMain/INFO]: [bootstrap] Running Java 25 (OpenJDK 64-Bit Server VM 25.0.1+8-27; Oracle Corporation null) on Windows 11 10.0 (amd64)
+[09:36:22] [ServerMain/INFO]: [bootstrap] Loading Paper 26.1.2-13-main@04ee8ea (2026-04-19T14:09:55Z) for Minecraft 26.1.2
+[09:36:22] [ServerMain/INFO]: [PluginInitializerManager] Initializing plugins...
+[09:36:22] [ServerMain/INFO]: [PluginInitializerManager] Initialized 1 plugin
+[09:36:22] [ServerMain/INFO]: [PluginInitializerManager] Bukkit plugins (1):
+ - Incision-Test (1.0.0)
+[09:36:24] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[09:36:25] [ServerMain/INFO]: Loaded 1515 recipes
+[09:36:25] [ServerMain/INFO]: Loaded 1617 advancements
+[09:36:25] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Initialising converters for DataConverter...
+[09:36:25] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Finished initialising converters for DataConverter in 138.5ms
+[09:36:25] [Server thread/INFO]: Starting minecraft server version 26.1.2
+[09:36:25] [Server thread/WARN]: ****************************
+[09:36:25] [Server thread/WARN]: YOU ARE RUNNING THIS SERVER AS AN ADMINISTRATIVE OR ROOT USER. THIS IS NOT ADVISED.
+[09:36:25] [Server thread/WARN]: YOU ARE OPENING YOURSELF UP TO POTENTIAL RISKS WHEN DOING THIS.
+[09:36:25] [Server thread/WARN]: FOR MORE INFORMATION, SEE https://madelinemiller.dev/blog/root-minecraft-server/
+[09:36:25] [Server thread/WARN]: ****************************
+[09:36:25] [Server thread/INFO]: Loading properties
+[09:36:25] [Server thread/INFO]: This server is running Paper version 26.1.2-13-main@04ee8ea (2026-04-19T14:09:55Z) (Implementing API version 26.1.2.build.13-alpha)
+[09:36:25] [Server thread/INFO]: [spark] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
+[09:36:25] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[09:36:25] [Server thread/INFO]: Using 4 threads for Netty based IO
+[09:36:25] [Server thread/INFO]: [MoonriseCommon] Paper is using 8 worker threads, 1 I/O threads
+[09:36:25] [Server thread/INFO]: Default game type: SURVIVAL
+[09:36:25] [Server thread/INFO]: Generating keypair
+[09:36:25] [Server thread/INFO]: Starting Minecraft server on *:25565
+[09:36:25] [Server thread/INFO]: Paper: Using Java compression from Velocity.
+[09:36:25] [Server thread/INFO]: Paper: Using Java cipher from Velocity.
+[09:36:25] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 当前以调试模式运行。
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 基础依赖加载完成，用时 166 毫秒。
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:common-env:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 从 common-env-6.3.0-local-dev-fae78078.jar 中加载 extra.properties 配置
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] RuntimeEnv 加载完成，用时 56 毫秒。
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]  = 调用 top.maplex.incisiontest.taboolib.common.env.RuntimeEnv.init()
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:common-util:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 从 common-util-6.3.0-local-dev-55516d5b.jar 中加载 extra.properties 配置
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] ClassVisitorHandler 初始化完成。
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]  = 调用 top.maplex.incisiontest.taboolib.common.inject.ClassVisitorHandler.init()
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]  = 调用 top.maplex.incisiontest.taboolib.common.io.ProjectScannerKt.init()
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:common-legacy-api:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:common-platform-api:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 从 common-platform-api-6.3.0-local-dev-4f1aa33f.jar 中加载 extra.properties 配置
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]  = 调用 top.maplex.incisiontest.taboolib.common.platform.PlatformFactory.init()
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-xseries:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-nms:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 从 bukkit-nms-6.3.0-local-dev-3d7d438f.jar 中加载 extra.properties 配置
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] PaperClassFinder 已生效。
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]  = 调用 top.maplex.incisiontest.taboolib.module.nms.MeteorReflection.init()
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-ui:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-nms-stable:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:minecraft-kether:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:platform-bukkit-impl:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-hook:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-ui-legacy:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:database:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-nms-legacy:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-nms-tag:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-ui-12100:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:platform-bukkit:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-nms-tag-modern:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-nms-tag-legacy:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:minecraft-command-helper:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:incision:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:bukkit-util:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:minecraft-i18n:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:basic-configuration:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:basic-submit-chain:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] 正在下载依赖 io.izzel.taboolib:minecraft-chat:6.3.0-local-dev
+[09:36:26] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 所有依赖加载完成，用时 961 毫秒。
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] ProjectScanner 扫描到 455 个类，用时 21 毫秒。
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] ClassVisitor 第一阶段过滤: 2,613 -> 1,126 个候选类，用时 10 毫秒。
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] ClassVisitor 第二阶段过滤: 1,126 -> 164 个有效类，用时 2 毫秒。
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] ClassVisitor 总用时 41 毫秒。
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] RunningClasses (All)            : 2,613
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] RunningClasses (Jar)            : 455
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] RunningClasses (Included)       : 164
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 跨平台服务初始化完成，用时 67 毫秒。
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]   唤醒: 21
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]   注入: 16
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]   服务: 6
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]  = PlatformOpenContainer (BukkitOpenContainer)
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]  = PlatformListener (BukkitListener)
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]  = PlatformAdapter (BukkitAdapter)
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]  = PlatformIO (BukkitIO)
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]  = PlatformExecutor (BukkitExecutor)
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]  = PlatformCommand (BukkitCommand)
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 生命周期 "CONST" 用时 112 毫秒。
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] Bukkit 插件初始化完成，用时 1,248 毫秒。
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 已屏蔽 IllegalAccess 警告，用时 0 毫秒。
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] ProjectScanner 扫描到 6 个资源文件，用时 0 毫秒。
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 加载配置文件: E:\Minecraft-Server\26.1.2\plugins\Incision-Test\datasource.yml
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 加载配置文件: E:\Minecraft-Server\26.1.2\plugins\Incision-Test\kether.yml
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] injectAll(INIT): 164 个类, 用时 56 毫秒
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]   - ConfigLoader: 34 毫秒
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]   - ClassVisitorAwake: 21 毫秒
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 生命周期 "INIT" 用时 57 毫秒。
+[09:36:27] [Server thread/INFO]: [Incision-Test] Loading server plugin Incision-Test v1.0.0
+[09:36:27] [Server thread/INFO]: [Incision] TabooLibNmsResolver 已启用: nms=UNKNOWN,unobf=true,uniCB=true,mojang=true,impl=RemapTranslation
+[09:36:27] [Server thread/INFO]: [Incision] JvmtiBackend: JVMTI native loaded from C:\Users\ADMINI~1\AppData\Local\Temp\incision-native\incision-jvmti-a9f10d0f.dll
+[09:36:27] [Server thread/INFO]: [Incision] IncisionBridge 已注入 bootstrap ClassLoader (JVMTI)
+[09:36:27] [Server thread/INFO]: [Incision] IncisionBridge dispatcher 已注册 (CL=bootstrap)
+[09:36:27] [Server thread/INFO]: [Incision] Incision LOAD: api=1 resolver=RemapRouter[TabooLibNmsResolver]
+[09:36:27] [Server thread/INFO]: [Incision] PipelineBackend installed into TabooLib RemapTranslation.extraTransformers
+[09:36:27] [Server thread/INFO]: [Incision] Checkup: 未发现任何 incision 切术（等待 SurgeryDesk 触达）
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 生命周期 "LOAD" 用时 49 毫秒。
+[09:36:27] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
+[09:36:27] [Server thread/INFO]: Preparing level "world"
+[09:36:27] [Server thread/INFO]: Loading 0 persistent chunks for level 'minecraft:overworld'...
+[09:36:27] [Server thread/INFO]: Preparing spawn area: 100%
+[09:36:27] [Server thread/INFO]: Prepared spawn area in 1 ms
+[09:36:27] [Server thread/INFO]: Loading 0 persistent chunks for level 'minecraft:the_nether'...
+[09:36:27] [Server thread/INFO]: Prepared spawn area in 0 ms
+[09:36:27] [Server thread/INFO]: Loading 0 persistent chunks for level 'minecraft:the_end'...
+[09:36:27] [Server thread/INFO]: Prepared spawn area in 2 ms
+[09:36:27] [Server thread/INFO]: Done preparing level "world" (0.192s)
+[09:36:27] [Server thread/INFO]: [Incision-Test] Enabling Incision-Test v1.0.0
+[09:36:27] [Server thread/INFO]: [Incision] Incision ENABLE: 物理织入开始
+[09:36:27] [Server thread/ERROR]: [Incision-Test] [STDERR] [Incision][WARN] Exchanges 不可用，使用进程内单例：Cannot invoke "Object.getClass()" because "obj" is null
+[09:36:27] [Server thread/WARN]: Nag author(s): '[]' of 'Incision-Test v1.0.0' about their usage of System.out/err.print. Please use your plugin's logger instead (JavaPlugin#getLogger).
+[09:36:27] [Server thread/INFO]: [Incision] Gate created: apiVersion=1
+[09:36:27] [Server thread/INFO]: [Incision] Incision Gate online: api=1
+[09:36:27] [Server thread/INFO]: [Incision] JVMTI native 后端就绪（Instrumentation 不可用）
+[09:36:27] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] MeteorInjector 初始化完成。
+[09:36:28] [Server thread/ERROR]: [Incision-Test] [STDERR] [Incision][WARN] VersionMatcher 解析失败: top.maplex.incisiontest.api.ThisMatcherDoesNotExist — java.lang.ClassNotFoundException: top.maplex.incisiontest.api.ThisMatcherDoesNotExist; 回退 NoopVersionMatcher
+[09:36:29] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] injectAll(ENABLE): 164 个类, 用时 1,729 毫秒
+[09:36:29] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]   - SurgeonScanner: 1,673 毫秒
+[09:36:29] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]   - ClassVisitorAwake: 27 毫秒
+[09:36:29] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG]   - SimpleCommandRegister: 18 毫秒
+[09:36:29] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 生命周期 "ENABLE" 用时 1,728 毫秒。
+[09:36:29] [Server thread/INFO]: [spark] Starting background profiler...
+[09:36:29] [Server thread/INFO]: [spark] The async-profiler engine is not supported for your os/arch (windows11/amd64), so the built-in Java engine will be used instead.
+[09:36:29] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[09:36:29] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[09:36:29] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[09:36:29] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[09:36:29] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[09:36:29] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[09:36:29] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
+[09:36:29] [Server thread/INFO]: Running delayed init tasks
+[09:36:29] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 生命周期 "ACTIVE" 用时 1 毫秒。
+[09:36:29] [Server thread/INFO]: [IncisionTest] onActive, scheduling auto-run in 2s ...
+[09:36:29] [Server thread/INFO]: Done (7.348s)! For help, type "help"
+[09:36:30] [Paper Async Task Handler Thread - 1/INFO]: *** Currently you are 2 build(s) behind ***
+[09:36:30] [Paper Async Task Handler Thread - 1/INFO]: *** It is highly recommended to download the latest build from https://papermc.io/downloads/paper ***
+[09:36:31] [Server thread/INFO]: [IncisionTest] running full suite ...
+[09:36:32] [Server thread/INFO]: [Incision-Test] [STDOUT] [Incision][Bridge][DEBUG] dispatch called: sig=top/maplex/incisiontest/fixture/TargetFixture$Companion.staticEcho(Ljava/lang/String;)Ljava/lang/String;@LEAD self=null args=1
+[09:36:32] [Server thread/INFO]: [Incision-Test] [STDOUT] [Incision][Bridge][DEBUG] systemHost=false systemDispatch=false local=true fallback=true contextCL=java.net.URLClassLoader bridgeCL=PluginClassLoader{plugin=Incision-Test v1.0.0, pluginEnabled=true, url=plugins\Incision-Test-1.0.0.jar}
+[09:36:32] [Server thread/INFO]: [Incision-Test] [STDOUT] [Incision][Bridge][DEBUG] local dispatch returned: null
+[09:36:33] [Server thread/INFO]: [Incision-Test] [STDOUT] [Incision][Bridge][DEBUG] dispatch called: sig=top/maplex/incisiontest/fixture/SurgeonAopTargetFixture$Companion.staticEcho(Ljava/lang/String;)Ljava/lang/String;@LEAD self=null args=1
+[09:36:33] [Server thread/INFO]: [Incision-Test] [STDOUT] [Incision][Bridge][DEBUG] systemHost=false systemDispatch=false local=true fallback=true contextCL=java.net.URLClassLoader bridgeCL=PluginClassLoader{plugin=Incision-Test v1.0.0, pluginEnabled=true, url=plugins\Incision-Test-1.0.0.jar}
+[09:36:33] [Server thread/INFO]: [Incision-Test] [STDOUT] [Incision][Bridge][DEBUG] local dispatch returned: null
+[09:36:34] [Server thread/INFO]: [STDOUT] [io.izzel.incision.bridge.IncisionBridge] [Incision][Bridge][DEBUG] dispatch called: sig=net/minecraft/server/MinecraftServer.isHardcore()Z@LEAD self=null args=0
+[09:36:34] [Server thread/INFO]: [STDOUT] [io.izzel.incision.bridge.IncisionBridge] [Incision][Bridge][DEBUG] systemHost=false systemDispatch=false local=true fallback=true contextCL=java.net.URLClassLoader bridgeCL=null
+[09:36:34] [Server thread/INFO]: [STDOUT] [io.izzel.incision.bridge.IncisionBridge] [Incision][Bridge][DEBUG] local dispatch returned: null
+[09:36:34] [Server thread/INFO]: [STDOUT] [io.izzel.incision.bridge.IncisionBridge] [Incision][Bridge][DEBUG] dispatch called: sig=net/minecraft/server/MinecraftServer.getPlayerCount()I@LEAD self=null args=0
+[09:36:34] [Server thread/INFO]: [STDOUT] [io.izzel.incision.bridge.IncisionBridge] [Incision][Bridge][DEBUG] systemHost=false systemDispatch=false local=true fallback=true contextCL=java.net.URLClassLoader bridgeCL=null
+[09:36:34] [Server thread/INFO]: [STDOUT] [io.izzel.incision.bridge.IncisionBridge] [Incision][Bridge][DEBUG] local dispatch returned: null
+[09:36:34] [Server thread/INFO]: [STDOUT] [io.izzel.incision.bridge.IncisionBridge] [Incision][Bridge][DEBUG] dispatch called: sig=net/minecraft/server/MinecraftServer.getPlayerCount()I@LEAD self=null args=0
+[09:36:34] [Server thread/INFO]: [STDOUT] [io.izzel.incision.bridge.IncisionBridge] [Incision][Bridge][DEBUG] systemHost=false systemDispatch=false local=true fallback=true contextCL=java.net.URLClassLoader bridgeCL=null
+[09:36:34] [Server thread/INFO]: [STDOUT] [io.izzel.incision.bridge.IncisionBridge] [Incision][Bridge][DEBUG] local dispatch returned: null
+[09:36:34] [Server thread/ERROR]: [Incision-Test] [STDERR] [Incision][WARN] VersionMatcher 解析失败: no.such.matcher.Xyz — java.lang.ClassNotFoundException: no.such.matcher.Xyz; 回退 NoopVersionMatcher
+[09:36:34] [Server thread/INFO]: ============ Incision Test ============
+[09:36:34] [Server thread/INFO]: FAIL where-on-bypass            0ms
+[09:36:34] [Server thread/INFO]:   FAIL: exception: NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because "<local3>" is null
+[09:36:34] [Server thread/INFO]: FAIL where-on-trim              0ms
+[09:36:34] [Server thread/INFO]:   FAIL: where 过 → @Trim ARG 改写实参为 777 expected=<777> actual=<3>
+[09:36:34] [Server thread/INFO]:     FAIL: @Trim where 仅 3 命中 expected=<1> actual=<0>
+[09:36:34] [Server thread/INFO]: FAIL insn-pattern-iconst5       0ms
+[09:36:34] [Server thread/INFO]:   FAIL: ICONST_5 单步命中 1 次 expected=<1> actual=<2>
+[09:36:34] [Server thread/INFO]: FAIL insn-pattern-seq2          0ms
+[09:36:34] [Server thread/INFO]:   FAIL: ICONST_5;ISTORE 序列命中 1 次 expected=<1> actual=<2>
+[09:36:34] [Server thread/INFO]: FAIL insn-pattern-ldc-cst       0ms
+[09:36:34] [Server thread/INFO]:   FAIL: LDC + cst=incision-tag 精准命中 1 次 expected=<1> actual=<2>
+[09:36:34] [Server thread/INFO]: FAIL insn-pattern-new           0ms
+[09:36:34] [Server thread/INFO]:   FAIL: NEW StringBuilder 命中 1 次 expected=<1> actual=<2>
+[09:36:34] [Server thread/INFO]: FAIL insn-pattern-invokestatic  0ms
+[09:36:34] [Server thread/INFO]:   FAIL: INVOKESTATIC Math.max 命中 1 次 expected=<1> actual=<2>
+[09:36:34] [Server thread/INFO]: FAIL insn-pattern-goto          0ms
+[09:36:34] [Server thread/INFO]:   FAIL: branch() 反编译无 GOTO，命中 0 次 expected=<0> actual=<1>
+[09:36:34] [Server thread/INFO]: FAIL insn-pattern-empty-steps   0ms
+[09:36:34] [Server thread/INFO]:   FAIL: 空 steps 数组永不产生 MatchEvent expected=<0> actual=<1>
+[09:36:34] [Server thread/INFO]: FAIL insn-pattern-glob-desc     0ms
+[09:36:34] [Server thread/INFO]:   FAIL: desc glob 当前不支持中段 `*`，命中 0 次 expected=<0> actual=<1>
+[09:36:34] [Server thread/INFO]: FAIL insn-pattern-nop           0ms
+[09:36:34] [Server thread/INFO]:   FAIL: emptyBody 无 NOP 指令，命中 0 次 expected=<0> actual=<1>
+[09:36:34] [Server thread/INFO]: FAIL scope-trail-class-prefix-a 0ms
+[09:36:34] [Server thread/INFO]:   FAIL: class:X & method:X#A 命中 expected=<1> actual=<0>
+[09:36:34] [Server thread/INFO]: FAIL scope-trail-class-prefix-b 0ms
+[09:36:34] [Server thread/INFO]:   FAIL: class:X & method:X#B 命中 expected=<1> actual=<0>
+[09:36:34] [Server thread/INFO]: FAIL scope-splice-full          0ms
+[09:36:34] [Server thread/INFO]:   FAIL: @Splice + proceed 放行返回原值 expected=<Bob@30> actual=<scoped-arg@30>
+[09:36:34] [Server thread/INFO]: 结果: 326 pass / 14 fail / 340 total
+[09:37:31] [Server thread/INFO]: Stopping server
+[09:37:31] [Server thread/INFO]: [Incision-Test] Disabling Incision-Test v1.0.0
+[09:37:31] [Server thread/INFO]: [Incision] Incision DISABLE: 卸载本插件全部 advice
+[09:37:31] [Server thread/INFO]: [Incision] AutoHeal: classLoader=PluginClassLoader{plugin=Incision-Test v1.0.0, pluginEnabled=false, url=plugins\Incision-Test-1.0.0.jar} removed=299 advice
+[09:37:31] [Server thread/INFO]: [Incision-Test-1.0.0] [DEBUG] 生命周期 "DISABLE" 用时 7 毫秒。
+[09:37:31] [Server thread/INFO]: Saving players
+[09:37:31] [Server thread/INFO]: Saving worlds
+[09:37:31] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'minecraft:overworld'
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'minecraft:overworld'
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'minecraft:overworld'
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'minecraft:overworld' in 0.00s
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'minecraft:overworld'
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'minecraft:overworld'
+[09:37:31] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'minecraft:the_nether'
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'minecraft:the_nether'
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'minecraft:the_nether'
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'minecraft:the_nether' in 0.00s
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'minecraft:the_nether'
+[09:37:31] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'minecraft:the_nether'
+[09:37:31] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[09:37:32] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'minecraft:the_end'
+[09:37:32] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'minecraft:the_end'
+[09:37:32] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'minecraft:the_end'
+[09:37:32] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'minecraft:the_end' in 0.00s
+[09:37:32] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'minecraft:the_end'
+[09:37:32] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'minecraft:the_end'
+[09:37:32] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[09:37:32] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[09:37:32] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[09:37:32] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
+[09:37:32] [Server thread/INFO]: Waiting for all RegionFile I/O tasks to complete...
+[09:37:32] [Server thread/INFO]: All RegionFile I/O tasks to complete
+[09:37:32] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of worker pool for up to 60s...
+[09:37:32] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of I/O pool for up to 60s...
