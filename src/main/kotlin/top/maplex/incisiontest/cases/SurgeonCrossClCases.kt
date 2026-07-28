@@ -1,5 +1,12 @@
 package top.maplex.incisiontest.cases
 
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import org.bukkit.Bukkit
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Splice
@@ -25,12 +32,17 @@ object SurgeonCrossClCases {
 
     // ---- NMS ----
 
-    @Lead(scope = "method:net.minecraft.server.MinecraftServer#isHardcore()boolean")
+    // 不同版本把实现放在 MinecraftServer 或 DedicatedServer；两条逻辑坐标都交给
+    // 自动 remap，实际虚调用只会经过当前版本真正声明的方法一次。
+    @Lead(pointcut = Pointcut(anyOf = [
+        Selector(kind = SelectorKind.METHOD, owner = "net/minecraft/server/MinecraftServer", name = "isHardcore", descriptor = "()Z"),
+        Selector(kind = SelectorKind.METHOD, owner = "net/minecraft/server/dedicated/DedicatedServer", name = "isHardcore", descriptor = "()Z"),
+    ], maxMatches = 2))
     fun onIsHardcore(theatre: Theatre) {
         isHardcoreLeadHits++
     }
 
-    @Lead(scope = "method:net.minecraft.server.MinecraftServer#getPlayerCount()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "net/minecraft/server/MinecraftServer", name = "getPlayerCount", descriptor = "()I")]))
     fun onGetPlayerCount(theatre: Theatre) {
         getPlayerCountLeadHits++
     }
@@ -41,7 +53,7 @@ object SurgeonCrossClCases {
 
     @Volatile var getMaxPlayersLeadHits = 0
 
-    @Lead(scope = "method:org.bukkit.Bukkit#getMaxPlayers()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "org/bukkit/Bukkit", name = "getMaxPlayers", descriptor = "()I")]))
     fun onGetMaxPlayers(theatre: Theatre) {
         getMaxPlayersLeadHits++
     }

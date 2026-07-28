@@ -42,6 +42,11 @@ dependencies {
 //    compileOnly("ink.ptms.core:v11200:11200")
     // Source: https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation("org.apache.commons:commons-lang3:3.20.0")
+    // JMH 由服务端进程内运行；fork=0 才能复用已经完成 Incision 织入的插件 ClassLoader。
+    implementation("org.openjdk.jmh:jmh-core:1.37")
+    annotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:1.37")
+    // Instrumentation 矩阵显式提供标准 attach 实现，避免把发行版缺少 tools.jar 误判为 Incision 性能差异。
+    implementation("net.bytebuddy:byte-buddy-agent:1.14.18")
 }
 
 tasks.withType<JavaCompile> {

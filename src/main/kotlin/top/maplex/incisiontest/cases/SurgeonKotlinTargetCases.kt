@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.KotlinTarget
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Operation
@@ -26,7 +34,7 @@ object SurgeonKotlinTargetCases {
      * 仅 companionInstance —— 织入 companion 实例方法。
      * 调用 `Companion.companionOnlyEcho(...)` 时应命中。
      */
-    @Lead(scope = "method:$FIX#companionOnlyEcho(java.lang.String)java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "companionOnlyEcho", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]))
     @KotlinTarget(companionInstance = true)
     fun onCompanionOnly(theatre: Theatre) {
         companionOnlyHits++
@@ -36,7 +44,7 @@ object SurgeonKotlinTargetCases {
      * 仅 jvmStaticBridge —— 织入外部类静态桥。
      * 调用 `SurgeonKotlinTargetFixture.staticOnlyEcho(...)` 时应命中。
      */
-    @Lead(scope = "method:$FIX#staticOnlyEcho(java.lang.String)java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "staticOnlyEcho", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]))
     @KotlinTarget(jvmStaticBridge = true)
     fun onStaticOnly(theatre: Theatre) {
         staticOnlyHits++
@@ -49,7 +57,7 @@ object SurgeonKotlinTargetCases {
      *
      * 静态桥路径 advice。
      */
-    @Lead(scope = "method:$FIX#bothEcho(java.lang.String)java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "bothEcho", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]))
     @KotlinTarget(jvmStaticBridge = true)
     @Operation(id = "both-static-path")
     fun onBothStatic(theatre: Theatre) {
@@ -57,7 +65,7 @@ object SurgeonKotlinTargetCases {
     }
 
     /** companion 实例路径 advice。 */
-    @Lead(scope = "method:$FIX#bothEcho(java.lang.String)java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "bothEcho", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]))
     @KotlinTarget(companionInstance = true)
     @Operation(id = "both-companion-path")
     fun onBothCompanion(theatre: Theatre) {

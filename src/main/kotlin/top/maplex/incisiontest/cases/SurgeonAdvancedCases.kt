@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Excise
 import taboolib.module.incision.annotation.Bypass
 import taboolib.module.incision.annotation.Operation
@@ -23,15 +31,14 @@ object SurgeonAdvancedCases {
     @Volatile var exciseHits = 0
     @Volatile var bypassHits = 0
 
-    @Excise(scope = "method:top.maplex.incisiontest.fixture.SurgeonAdvancedTargetFixture#returnsBoolean(boolean)boolean")
+    @Excise(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonAdvancedTargetFixture", name = "returnsBoolean", descriptor = "(Z)Z")]))
     fun onReturnsBoolExcise(theatre: Theatre): Any? {
         exciseHits++
         return true
     }
 
     @Operation(priority = 100)
-    @Bypass(
-        method = "top.maplex.incisiontest.fixture.SurgeonAdvancedTargetFixture#longCalc(long,long)long",
+    @Bypass(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonAdvancedTargetFixture", name = "longCalc", descriptor = "(JJ)J")]),
         site = Site(anchor = Anchor.HEAD)
     )
     fun onLongCalcBypass(theatre: Theatre): Any? {

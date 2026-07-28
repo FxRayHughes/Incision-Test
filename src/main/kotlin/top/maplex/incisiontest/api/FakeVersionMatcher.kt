@@ -5,7 +5,7 @@ import taboolib.module.incision.api.VersionMatcher
 /**
  * 测试用伪版本匹配器 —— 始终返回 "2.5"。
  *
- * 通过 `@Version(matcher = "top.maplex.incisiontest.api.FakeVersionMatcher")`
+ * 通过 `@Version(matcher = top.maplex.incisiontest.api.FakeVersionMatcher::class)`
  * 接入 SurgeonScanner 的 `VersionMatchers.resolve` 通路（object INSTANCE 优先）。
  *
  * 用途：让区间过滤测试不依赖 NMS 环境就能稳定判定命中/不命中，
@@ -13,4 +13,13 @@ import taboolib.module.incision.api.VersionMatcher
  */
 object FakeVersionMatcher : VersionMatcher {
     override fun current(): String = "2.5"
+}
+
+/** 构造期失败的 matcher，用于验证解析失败必须 fail-closed。 */
+class FailingVersionMatcher : VersionMatcher {
+    init {
+        error("intentional matcher construction failure")
+    }
+
+    override fun current(): String? = null
 }

@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Operation
 import taboolib.module.incision.annotation.Splice
@@ -28,28 +36,28 @@ object SurgeonOperationCases {
 
     /** @Operation(id="custom-operation-id") —— 用自定义 id 覆盖方法名 */
     @Operation(id = "custom-operation-id")
-    @Lead(scope = "method:$FIX#customIdTarget()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "customIdTarget", descriptor = "()I")]))
     fun onCustomId(theatre: Theatre) {
         customIdHits++
     }
 
     /** @Operation(enabled=false) —— 默认禁用，不应触发，除非显式 resume */
     @Operation(enabled = false)
-    @Lead(scope = "method:$FIX#disabledTarget()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "disabledTarget", descriptor = "()I")]))
     fun disabledAdvice(theatre: Theatre) {
         disabledHits++
     }
 
     /** 高优先级 —— 先执行 */
     @Operation(priority = 100)
-    @Lead(scope = "method:$FIX#priorityTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "priorityTarget", descriptor = "()Ljava/util/List;")]))
     fun highPriority(theatre: Theatre) {
         orderLog += "high"
     }
 
     /** 低优先级 —— 后执行 */
     @Operation(priority = 1)
-    @Lead(scope = "method:$FIX#priorityTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "priorityTarget", descriptor = "()Ljava/util/List;")]))
     fun lowPriority(theatre: Theatre) {
         orderLog += "low"
     }
@@ -59,20 +67,20 @@ object SurgeonOperationCases {
     // ----------------------------------------------------------------------
 
     /** 不带 @Operation —— 沿用 @Surgeon(priority=5) 默认值 */
-    @Lead(scope = "method:$FIX#surgeonDefaultTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "surgeonDefaultTarget", descriptor = "()Ljava/util/List;")]))
     fun surgeonDefaultAdvice(theatre: Theatre) {
         surgeonDefaultLog += "surgeon-default-5"
     }
 
     /** 带 @Operation(priority=20) —— 应覆盖 @Surgeon(priority=5)，先于上面执行 */
     @Operation(priority = 20)
-    @Lead(scope = "method:$FIX#surgeonDefaultTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "surgeonDefaultTarget", descriptor = "()Ljava/util/List;")]))
     fun surgeonOverrideAdvice(theatre: Theatre) {
         surgeonDefaultLog += "operation-override-20"
     }
 
     /** 本类（@Surgeon priority=5）的 advice —— 与外部 @Surgeon(priority=50) 比较 */
-    @Lead(scope = "method:$FIX#multiSurgeonTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "multiSurgeonTarget", descriptor = "()Ljava/util/List;")]))
     fun multiSurgeonLowerSide(theatre: Theatre) {
         multiSurgeonLog += "low-surgeon-5"
     }
@@ -97,7 +105,7 @@ object SurgeonOperationHigherCases {
 
     private const val FIX = "top.maplex.incisiontest.fixture.SurgeonOperationTargetFixture"
 
-    @Lead(scope = "method:$FIX#multiSurgeonTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "multiSurgeonTarget", descriptor = "()Ljava/util/List;")]))
     fun higherSurgeonAdvice(theatre: Theatre) {
         SurgeonOperationCases.multiSurgeonLog += "high-surgeon-50"
     }

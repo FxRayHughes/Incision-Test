@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Operation
 import taboolib.module.incision.annotation.Surgeon
@@ -22,7 +30,7 @@ object SurgeonAnchorMatrixPriorityDefault {
 
     @Volatile var defaultHits = 0
 
-    @Lead(scope = "method:$FIX#prioritySurgeonTarget()java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "prioritySurgeonTarget", descriptor = "()Ljava/lang/String;")]))
     fun defaultPriority(theatre: Theatre) {
         defaultHits++
         orderLog += "default(0)"
@@ -42,7 +50,7 @@ object SurgeonAnchorMatrixPriorityHigh {
 
     @Volatile var highHits = 0
 
-    @Lead(scope = "method:$FIX#prioritySurgeonTarget()java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "prioritySurgeonTarget", descriptor = "()Ljava/lang/String;")]))
     fun highPriority(theatre: Theatre) {
         highHits++
         SurgeonAnchorMatrixPriorityDefault.orderLog += "high(100)"
@@ -59,7 +67,7 @@ object SurgeonAnchorMatrixPriorityLow {
 
     @Volatile var lowHits = 0
 
-    @Lead(scope = "method:$FIX#prioritySurgeonTarget()java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "prioritySurgeonTarget", descriptor = "()Ljava/lang/String;")]))
     fun lowPriority(theatre: Theatre) {
         lowHits++
         SurgeonAnchorMatrixPriorityDefault.orderLog += "low(-50)"
@@ -83,27 +91,27 @@ object SurgeonAnchorMatrixPriorityOperation {
     @Volatile var defaultHits = 0
 
     @Operation(priority = 200)
-    @Lead(scope = "method:$FIX#priorityOperationTarget()java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "priorityOperationTarget", descriptor = "()Ljava/lang/String;")]))
     fun opPriority200(theatre: Theatre) {
         pos200Hits++
         orderLog += "op-200"
     }
 
     @Operation(priority = 50)
-    @Lead(scope = "method:$FIX#priorityOperationTarget()java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "priorityOperationTarget", descriptor = "()Ljava/lang/String;")]))
     fun opPriority50(theatre: Theatre) {
         pos50Hits++
         orderLog += "op-50"
     }
 
     @Operation(priority = -10)
-    @Lead(scope = "method:$FIX#priorityOperationTarget()java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "priorityOperationTarget", descriptor = "()Ljava/lang/String;")]))
     fun opPriorityNeg10(theatre: Theatre) {
         neg10Hits++
         orderLog += "op-neg10"
     }
 
-    @Lead(scope = "method:$FIX#priorityOperationTarget()java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "priorityOperationTarget", descriptor = "()Ljava/lang/String;")]))
     fun opPriorityDefault(theatre: Theatre) {
         defaultHits++
         orderLog += "op-default"

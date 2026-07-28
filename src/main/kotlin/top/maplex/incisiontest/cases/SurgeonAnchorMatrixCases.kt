@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Bypass
 import taboolib.module.incision.annotation.Excise
 import taboolib.module.incision.annotation.Graft
@@ -57,26 +65,26 @@ object SurgeonAnchorMatrixCases {
     // ====================================================================
 
     /** @Lead = HEAD 语义锚点（方法入口） */
-    @Lead(scope = "method:$FIX#matrixSimpleReturn()java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixSimpleReturn", descriptor = "()Ljava/lang/String;")]))
     fun headLead(theatre: Theatre) {
         headLeadHits++
     }
 
     /** @Trail = TAIL 语义锚点（正常出口） */
-    @Trail(scope = "method:$FIX#matrixSimpleReturn()java.lang.String", onThrow = false)
+    @Trail(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixSimpleReturn", descriptor = "()Ljava/lang/String;")]), onThrow = false)
     fun tailTrailNormal(theatre: Theatre) {
         tailTrailNormalHits++
     }
 
     /** @Trail RETURN —— 多 return 出口都应触发（flag=true 与 flag=false 各一次） */
-    @Trail(scope = "method:$FIX#matrixMultiReturn(boolean)int", onThrow = false)
+    @Trail(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixMultiReturn", descriptor = "(Z)I")]), onThrow = false)
     fun trailMultiReturn(theatre: Theatre) {
         val flag = theatre.args[0] as Boolean
         if (flag) trailReturnFlagTrueHits++ else trailReturnFlagFalseHits++
     }
 
     /** @Trail THROW —— onThrow=true 时异常出口也触发 */
-    @Trail(scope = "method:$FIX#matrixThrowUncaught(boolean)java.lang.String", onThrow = true)
+    @Trail(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixThrowUncaught", descriptor = "(Z)Ljava/lang/String;")]), onThrow = true)
     fun trailOnThrow(theatre: Theatre) {
         if (theatre.throwable != null) trailThrowHits++
         else trailThrowOk++
@@ -87,11 +95,10 @@ object SurgeonAnchorMatrixCases {
     // ====================================================================
 
     /** @Graft INVOKE BEFORE ordinal=0 —— 仅命中第一次 helperA 调用 */
-    @Graft(
-        method = "$FIX#matrixInvokeChain(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixInvokeChain", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperA(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperA", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = 0,
         ),
@@ -101,11 +108,10 @@ object SurgeonAnchorMatrixCases {
     }
 
     /** @Graft INVOKE BEFORE ordinal=1 —— 仅命中第二次 helperA 调用 */
-    @Graft(
-        method = "$FIX#matrixInvokeChain(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixInvokeChain", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperA(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperA", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = 1,
         ),
@@ -115,13 +121,13 @@ object SurgeonAnchorMatrixCases {
     }
 
     /** @Graft INVOKE BEFORE ordinal=-1 —— 命中全部三次 helperA 调用 */
-    @Graft(
-        method = "$FIX#matrixInvokeChain(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixInvokeChain", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperA(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperA", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = -1,
+            maxMatches = -1,
         ),
     )
     fun graftInvokeBeforeAll(theatre: Theatre) {
@@ -129,11 +135,10 @@ object SurgeonAnchorMatrixCases {
     }
 
     /** @Graft INVOKE AFTER ordinal=0 —— 仅命中第一次 helperA 调用之后 */
-    @Graft(
-        method = "$FIX#matrixInvokeChain(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixInvokeChain", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperA(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperA", descriptor = "(I)I"),
             shift = Shift.AFTER,
             ordinal = 0,
         ),
@@ -146,33 +151,30 @@ object SurgeonAnchorMatrixCases {
     // FIELD_GET / FIELD_PUT / NEW / THROW
     // ====================================================================
 
-    @Graft(
-        method = "$FIX#matrixFieldRead()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixFieldRead", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.FIELD_GET,
-            target = "$FIX#counter:int",
+            target = Selector(kind = SelectorKind.FIELD, owner = "$FIX", name = "counter", descriptor = "I"),
         ),
     )
     fun graftFieldGet(theatre: Theatre) {
         graftFieldGetHits++
     }
 
-    @Graft(
-        method = "$FIX#matrixFieldWrite(int)V",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixFieldWrite", descriptor = "(I)V")]),
         site = Site(
             anchor = Anchor.FIELD_PUT,
-            target = "$FIX#lastWritten:int",
+            target = Selector(kind = SelectorKind.FIELD, owner = "$FIX", name = "lastWritten", descriptor = "I"),
         ),
     )
     fun graftFieldPut(theatre: Theatre) {
         graftFieldPutHits++
     }
 
-    @Graft(
-        method = "$FIX#matrixAllocate()java.util.ArrayList",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixAllocate", descriptor = "()Ljava/util/ArrayList;")]),
         site = Site(
             anchor = Anchor.NEW,
-            target = "java.util.ArrayList",
+            target = Selector(kind = SelectorKind.CLASS, owner = "java/util/ArrayList"),
         ),
     )
     fun graftNew(theatre: Theatre) {
@@ -180,8 +182,7 @@ object SurgeonAnchorMatrixCases {
     }
 
     /** @Graft THROW —— 在 throw 指令前触发 */
-    @Graft(
-        method = "$FIX#matrixThrowUncaught(boolean)java.lang.String",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixThrowUncaught", descriptor = "(Z)Ljava/lang/String;")]),
         site = Site(anchor = Anchor.THROW),
     )
     fun graftThrow(theatre: Theatre) {
@@ -192,11 +193,10 @@ object SurgeonAnchorMatrixCases {
     // @Bypass INVOKE —— 替换调用返回值
     // ====================================================================
 
-    @Bypass(
-        method = "$FIX#matrixInvokeMixed(int)int",
+    @Bypass(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixInvokeMixed", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperA(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperA", descriptor = "(I)I"),
         ),
     )
     fun bypassReplace(theatre: Theatre): Any? {
@@ -208,8 +208,7 @@ object SurgeonAnchorMatrixCases {
     // @Trim RETURN / ARG (index=0) / ARG (index=1)
     // ====================================================================
 
-    @Trim(
-        method = "$FIX#matrixPlainReturn()int",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixPlainReturn", descriptor = "()I")]),
         kind = Trim.Kind.RETURN,
     )
     fun trimReturnPlain(theatre: Theatre): Any? {
@@ -217,8 +216,7 @@ object SurgeonAnchorMatrixCases {
         return -1
     }
 
-    @Trim(
-        method = "$FIX#matrixEcho(java.lang.String)java.lang.String",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixEcho", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]),
         kind = Trim.Kind.ARG,
         index = 0,
     )
@@ -227,8 +225,7 @@ object SurgeonAnchorMatrixCases {
         return "trimmed-0"
     }
 
-    @Trim(
-        method = "$FIX#matrixCombine(java.lang.String,java.lang.String)java.lang.String",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixCombine", descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;")]),
         kind = Trim.Kind.ARG,
         index = 1,
     )
@@ -241,7 +238,7 @@ object SurgeonAnchorMatrixCases {
     // @Excise 方法级整段替换
     // ====================================================================
 
-    @Excise(scope = "method:$FIX#matrixExciseTarget()java.lang.String")
+    @Excise(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixExciseTarget", descriptor = "()Ljava/lang/String;")]))
     fun exciseFullReplace(theatre: Theatre): Any? {
         exciseHits++
         return "excised-payload"
@@ -252,7 +249,7 @@ object SurgeonAnchorMatrixCases {
     // ====================================================================
 
     /** @Splice proceed —— 放行原方法、不改返回 */
-    @Splice(scope = "method:$FIX#matrixSpliceTarget(int)int")
+    @Splice(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "matrixSpliceTarget", descriptor = "(I)I")]))
     fun spliceProceedAndKeep(theatre: Theatre): Any? {
         spliceProceedHits++
         return theatre.resume.proceed()

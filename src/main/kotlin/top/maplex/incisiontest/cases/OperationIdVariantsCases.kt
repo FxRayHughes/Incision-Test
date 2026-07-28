@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Operation
 import taboolib.module.incision.annotation.Surgeon
@@ -27,20 +35,20 @@ object OperationIdVariantsCases {
     @Volatile var longHits = 0
 
     @Operation(id = "id-variant-normal")
-    @Lead(scope = "method:$FIX#idNormalTarget()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "idNormalTarget", descriptor = "()I")]))
     fun adviceNormal(theatre: Theatre) { normalHits++ }
 
     @Operation(id = "id::with/special.chars-001")
-    @Lead(scope = "method:$FIX#idSpecialCharsTarget()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "idSpecialCharsTarget", descriptor = "()I")]))
     fun adviceSpecial(theatre: Theatre) { specialHits++ }
 
     /** id="" — 应回退到方法名（`adviceEmptyFallback`）作为后缀。 */
     @Operation(id = "")
-    @Lead(scope = "method:$FIX#idEmptyFallbackTarget()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "idEmptyFallbackTarget", descriptor = "()I")]))
     fun adviceEmptyFallback(theatre: Theatre) { emptyHits++ }
 
     @Operation(id = VERY_LONG_ID)
-    @Lead(scope = "method:$FIX#idVeryLongTarget()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "idVeryLongTarget", descriptor = "()I")]))
     fun adviceVeryLong(theatre: Theatre) { longHits++ }
 
     fun reset() {

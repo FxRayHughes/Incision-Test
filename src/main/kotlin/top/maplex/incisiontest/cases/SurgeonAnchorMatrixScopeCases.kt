@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Bypass
 import taboolib.module.incision.annotation.Graft
 import taboolib.module.incision.annotation.Lead
@@ -37,7 +45,7 @@ object SurgeonAnchorMatrixScopeCases {
     @Volatile var trimFullDescHits = 0
 
     /** scope: 完整 method 描述符 */
-    @Lead(scope = "method:$FIX#scopeMethodFull(java.lang.String)java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "scopeMethodFull", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]))
     fun leadFullDescriptor(theatre: Theatre) { leadFullHits++ }
 
     /** scope: 带 `(*)` 通配实参 */
@@ -45,36 +53,33 @@ object SurgeonAnchorMatrixScopeCases {
     fun leadWildArgs(theatre: Theatre) { leadWildHits++ }
 
     /** scope: `*` 通配方法名 */
-    @Lead(scope = "method:$FIX#scopeStarTarget()java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "scopeStarTarget", descriptor = "()Ljava/lang/String;")]))
     fun leadExactTarget(theatre: Theatre) { leadStarTargetHits++ }
 
     /** scope: `class:` 前缀 + `method:` 联合（And） —— scopeClassA */
-    @Trail(
-        scope = "class:$FIX & method:$FIX#scopeClassA()int",
+    @Trail(pointcut = Pointcut(allOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "scopeClassA", descriptor = "()I")]),
         onThrow = false,
     )
     fun trailClassAndMethodA(theatre: Theatre) { trailClassPrefixA++ }
 
     /** scope: `class:` 前缀 + `method:` 联合 —— scopeClassB */
-    @Trail(
-        scope = "class:$FIX & method:$FIX#scopeClassB()int",
+    @Trail(pointcut = Pointcut(allOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "scopeClassB", descriptor = "()I")]),
         onThrow = false,
     )
     fun trailClassAndMethodB(theatre: Theatre) { trailClassPrefixB++ }
 
     /** @Splice scope: 完整 method 描述符 */
-    @Splice(scope = "method:$FIX#scopeShorthandArgs(java.lang.String,int)java.lang.String")
+    @Splice(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "scopeShorthandArgs", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]))
     fun spliceFull(theatre: Theatre): Any? {
         spliceFullHits++
         return theatre.resume.proceed()
     }
 
     /** @Bypass.method: 完整描述符 —— 替换 inner1 调用 */
-    @Bypass(
-        method = "$FIX#scopeInvokeHelper()int",
+    @Bypass(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "scopeInvokeHelper", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#inner1()int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "inner1", descriptor = "()I"),
         ),
     )
     fun bypassFullDescriptor(theatre: Theatre): Any? {
@@ -83,18 +88,16 @@ object SurgeonAnchorMatrixScopeCases {
     }
 
     /** @Graft.method: 完整描述符 —— 在 inner2 调用前触发 */
-    @Graft(
-        method = "$FIX#scopeInvokeHelper()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "scopeInvokeHelper", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#inner2()int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "inner2", descriptor = "()I"),
         ),
     )
     fun graftFullDescriptor(theatre: Theatre) { graftFullDescHits++ }
 
     /** @Trim.method: 完整描述符 + ARG index=0。与 @Splice 拆到独立目标，避免同方法长期互相污染。 */
-    @Trim(
-        method = "$FIX#scopeTrimArgs(java.lang.String,int)java.lang.String",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "scopeTrimArgs", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]),
         kind = Trim.Kind.ARG,
         index = 0,
     )

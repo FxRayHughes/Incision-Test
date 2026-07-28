@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Bypass
 import taboolib.module.incision.annotation.Excise
 import taboolib.module.incision.annotation.Operation
@@ -24,7 +32,7 @@ object SurgeonMixinCases {
     @Volatile var bypassHits = 0
 
     /** @Overwrite：整段替换 mayThrow，始终返回 "mixin-safe"，不再抛异常。 */
-    @Excise(scope = "method:top.maplex.incisiontest.fixture.SurgeonMixinTargetFixture#mayThrow(boolean)java.lang.String")
+    @Excise(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonMixinTargetFixture", name = "mayThrow", descriptor = "(Z)Ljava/lang/String;")]))
     fun overwriteMayThrow(theatre: Theatre): Any? {
         exciseHits++
         return "mixin-safe"
@@ -32,8 +40,7 @@ object SurgeonMixinCases {
 
     /** @Redirect：重定向 helper(int) 调用，返回固定值 888。 */
     @Operation(priority = 50)
-    @Bypass(
-        method = "top.maplex.incisiontest.fixture.SurgeonMixinTargetFixture#helper(int)int",
+    @Bypass(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonMixinTargetFixture", name = "helper", descriptor = "(I)I")]),
         site = Site(anchor = Anchor.HEAD)
     )
     fun redirectHelper(theatre: Theatre): Any? {

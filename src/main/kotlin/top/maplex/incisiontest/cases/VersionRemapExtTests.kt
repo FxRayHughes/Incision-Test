@@ -76,11 +76,11 @@ object VersionRemapExtTests {
     }
 
     fun testVersionMatcherResolve(): CaseResult = runCase("version-matcher-resolve") { a, _ ->
-        val default = VersionMatchers.resolve("")
+        val default = VersionMatchers.resolve(taboolib.module.incision.api.MinecraftVersionMatcher::class)
         a.check(default::class.java.simpleName == "MinecraftVersionMatcher", "空 fqcn 应返回 MinecraftVersionMatcher (actual=${default::class.java.simpleName})")
-        val fake = VersionMatchers.resolve("top.maplex.incisiontest.api.FakeVersionMatcher")
+        val fake = VersionMatchers.resolve(top.maplex.incisiontest.api.FakeVersionMatcher::class)
         a.equal("2.5", fake.current(), "自定义 matcher current() 返回 2.5")
-        val bad = VersionMatchers.resolve("no.such.matcher.Xyz")
+        val bad = VersionMatchers.resolve(top.maplex.incisiontest.api.FailingVersionMatcher::class)
         a.check(bad === NoopVersionMatcher, "错误 fqcn 应回落 NoopVersionMatcher (actual=${bad.javaClass.name})")
     }
 
@@ -209,8 +209,8 @@ object VersionRemapExtTests {
     fun testVersionDefaultMatcher(): CaseResult = runCase("version-matcher-default") { a, _ ->
         SurgeonVersionMatrixCases.reset()
         SurgeonVersionMatrixFixture().defaultMatcherTarget()
-        // 非 NMS 环境 MinecraftVersionMatcher.current() = null → matches 总为 true → 命中
-        a.equal(1, SurgeonVersionMatrixCases.defaultMatcherHits, "空 matcher 且 NMS 缺失时，current=null → matches=true 始终命中")
+        // 默认 matcher 使用真实 Minecraft 版本；1.x 不在 [2.0, 3.0]，未知版本也必须 fail-closed。
+        a.equal(0, SurgeonVersionMatrixCases.defaultMatcherHits, "默认 matcher 不应把未知或区间外版本当作命中")
     }
 
     fun testVersionExplicitNoop(): CaseResult = runCase("version-matcher-explicit-noop") { a, _ ->
@@ -281,9 +281,8 @@ object VersionRemapExtTests {
     }
 
     fun testFakeMatcherCaching(): CaseResult = runCase("version-matcher-caching") { a, _ ->
-        val fqcn = "top.maplex.incisiontest.api.FakeVersionMatcher"
-        val m1 = VersionMatchers.resolve(fqcn)
-        val m2 = VersionMatchers.resolve(fqcn)
+        val m1 = VersionMatchers.resolve(top.maplex.incisiontest.api.FakeVersionMatcher::class)
+        val m2 = VersionMatchers.resolve(top.maplex.incisiontest.api.FakeVersionMatcher::class)
         a.check(m1 === m2, "VersionMatchers.resolve 对同 fqcn 应返回同一缓存实例")
     }
 

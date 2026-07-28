@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Splice
 import taboolib.module.incision.annotation.Surgeon
@@ -22,18 +30,18 @@ object SurgeonBasicCases {
     @Volatile var spliceHits = 0
     @Volatile var lastArg: Any? = null
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonBasicTargetFixture#greet(java.lang.String)java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonBasicTargetFixture", name = "greet", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]))
     fun onGreetLead(theatre: Theatre) {
         leadHits++
         lastArg = theatre.args.firstOrNull()
     }
 
-    @Trail(scope = "method:top.maplex.incisiontest.fixture.SurgeonBasicTargetFixture#voidNoArg()V")
+    @Trail(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonBasicTargetFixture", name = "voidNoArg", descriptor = "()V")]))
     fun onVoidTrail(theatre: Theatre) {
         trailHits++
     }
 
-    @Splice(scope = "method:top.maplex.incisiontest.fixture.SurgeonBasicTargetFixture#add(int,int)int")
+    @Splice(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonBasicTargetFixture", name = "add", descriptor = "(II)I")]))
     fun onAddSplice(theatre: Theatre): Any? {
         spliceHits++
         // 返回非 null → 替换原方法返回值

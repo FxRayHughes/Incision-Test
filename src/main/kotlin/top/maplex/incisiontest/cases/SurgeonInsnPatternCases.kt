@@ -1,5 +1,14 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+import taboolib.module.incision.annotation.PatternMode
+
 import taboolib.module.incision.annotation.InsnPattern
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Op
@@ -104,9 +113,9 @@ object SurgeonInsnPatternCases {
     }
 
     // ---- 旧 advice：保留以驱动 surgeon-insn-pattern 用例 ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.InsnPatternFixture#accumulate(int)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/InsnPatternFixture", name = "accumulate", descriptor = "(I)I")]),
         pattern = InsnPattern(
+            mode = PatternMode.ORDERED_SUBSEQUENCE,
             steps = [
                 Step(opcode = Op.ICONST_5),
                 Step(opcode = Op.ISTORE),
@@ -114,41 +123,40 @@ object SurgeonInsnPatternCases {
                 Step(opcode = Op.IADD),
             ]
         ),
-        where = ""
+        predicate = ""
     )
     fun onAccumulatePattern(theatre: Theatre) {
         patternHits++
     }
 
     // ---- 单 Step：精确 opcode ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#arithmetic(int)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "arithmetic", descriptor = "(I)I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.ICONST_5)]),
-        where = ""
+        predicate = ""
     )
     fun onArithmeticIconst5(theatre: Theatre) {
         arithmeticIconst5Hits++
     }
 
     // ---- 多 Step：2 步序列 ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#arithmetic(int)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "arithmetic", descriptor = "(I)I")]),
         pattern = InsnPattern(
+            mode = PatternMode.ORDERED_SUBSEQUENCE,
             steps = [
                 Step(opcode = Op.ICONST_5),
                 Step(opcode = Op.ISTORE),
             ]
         ),
-        where = ""
+        predicate = ""
     )
     fun onArithmeticSeq2(theatre: Theatre) {
         arithmeticSeq2Hits++
     }
 
     // ---- 多 Step：4 步序列 ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#arithmetic(int)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "arithmetic", descriptor = "(I)I")]),
         pattern = InsnPattern(
+            mode = PatternMode.ORDERED_SUBSEQUENCE,
             steps = [
                 Step(opcode = Op.ICONST_5),
                 Step(opcode = Op.ISTORE),
@@ -156,224 +164,208 @@ object SurgeonInsnPatternCases {
                 Step(opcode = Op.IADD),
             ]
         ),
-        where = ""
+        predicate = ""
     )
     fun onArithmeticSeq4(theatre: Theatre) {
         arithmeticSeq4Hits++
     }
 
     // ---- 多 Step：3 步 + ANY 通配 ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#arithmetic(int)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "arithmetic", descriptor = "(I)I")]),
         pattern = InsnPattern(
+            mode = PatternMode.ORDERED_SUBSEQUENCE,
             steps = [
                 Step(opcode = Op.ICONST_5),
                 Step(opcode = Op.ANY),
                 Step(opcode = Op.ILOAD),
             ]
         ),
-        where = ""
+        predicate = ""
     )
     fun onArithmeticAny(theatre: Theatre) {
         arithmeticAnyHits++
     }
 
     // ---- repeat>1：连续多个 ICONST_* / ISTORE 模式 ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#arithmetic(int)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "arithmetic", descriptor = "(I)I")]),
         pattern = InsnPattern(
+            mode = PatternMode.ORDERED_SUBSEQUENCE,
             steps = [
                 Step(opcode = Op.ANY, repeat = 3),
                 Step(opcode = Op.ICONST_5),
             ]
         ),
-        where = ""
+        predicate = ""
     )
     fun onIconstFamilyRepeat(theatre: Theatre) {
         iconstFamilyRepeatHits++
     }
 
     // ---- LDC：纯 opcode ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#loadStrings()java.lang.String",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "loadStrings", descriptor = "()Ljava/lang/String;")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.LDC)]),
-        where = ""
+        predicate = ""
     )
     fun onLdcString(theatre: Theatre) {
         ldcStringHits++
     }
 
     // ---- LDC + cst 常量过滤 ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#loadStrings()java.lang.String",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "loadStrings", descriptor = "()Ljava/lang/String;")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.LDC, cst = "incision-tag")]),
-        where = ""
+        predicate = ""
     )
     fun onLdcCstFiltered(theatre: Theatre) {
         ldcCstFilteredHits++
     }
 
     // ---- GETFIELD / PUTFIELD ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#touchFields()int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "touchFields", descriptor = "()I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.GETFIELD, name = "counter")]),
-        where = ""
+        predicate = ""
     )
     fun onFieldGet(theatre: Theatre) {
         fieldGetHits++
     }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#touchFields()int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "touchFields", descriptor = "()I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.PUTFIELD, name = "counter")]),
-        where = ""
+        predicate = ""
     )
     fun onFieldPut(theatre: Theatre) {
         fieldPutHits++
     }
 
     // ---- NEW + glob owner ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#buildBuffer()java.lang.String",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "buildBuffer", descriptor = "()Ljava/lang/String;")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.NEW, owner = "*StringBuilder*")]),
-        where = ""
+        predicate = ""
     )
     fun onNewStringBuilder(theatre: Theatre) {
         newStringBuilderHits++
     }
 
     // ---- INVOKEVIRTUAL + name glob ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#buildBuffer()java.lang.String",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "buildBuffer", descriptor = "()Ljava/lang/String;")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.INVOKEVIRTUAL, name = "append")]),
-        where = ""
+        predicate = ""
     )
     fun onInvokeVirtualGlob(theatre: Theatre) {
         invokeVirtualGlobHits++
     }
 
     // ---- INVOKESTATIC + 精确 owner-name ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#staticCalls()int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "staticCalls", descriptor = "()I")]),
         pattern = InsnPattern(
             steps = [
                 Step(opcode = Op.INVOKESTATIC, owner = "java/lang/Math", name = "max"),
             ]
         ),
-        where = ""
+        predicate = ""
     )
     fun onInvokeStaticMath(theatre: Theatre) {
         invokeStaticMathHits++
     }
 
     // ---- NEWARRAY ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#arrays()int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "arrays", descriptor = "()I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.NEWARRAY)]),
-        where = ""
+        predicate = ""
     )
     fun onNewArray(theatre: Theatre) {
         newArrayHits++
     }
 
     // ---- ANEWARRAY ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#arrays()int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "arrays", descriptor = "()I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.ANEWARRAY)]),
-        where = ""
+        predicate = ""
     )
     fun onANewArray(theatre: Theatre) {
         aNewArrayHits++
     }
 
     // ---- INSTANCEOF / CHECKCAST ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#typeCheck(java.lang.Object)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "typeCheck", descriptor = "(Ljava/lang/Object;)I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.INSTANCEOF)]),
-        where = ""
+        predicate = ""
     )
     fun onInstanceOf(theatre: Theatre) {
         instanceOfHits++
     }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#typeCheck(java.lang.Object)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "typeCheck", descriptor = "(Ljava/lang/Object;)I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.CHECKCAST)]),
-        where = ""
+        predicate = ""
     )
     fun onCheckCast(theatre: Theatre) {
         checkCastHits++
     }
 
     // ---- IFEQ / GOTO ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#branch(boolean)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "branch", descriptor = "(Z)I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.IFEQ)]),
-        where = ""
+        predicate = ""
     )
     fun onIfeq(theatre: Theatre) {
         ifeqHits++
     }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#branch(boolean)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "branch", descriptor = "(Z)I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.GOTO)]),
-        where = ""
+        predicate = ""
     )
     fun onGoto(theatre: Theatre) {
         gotoHits++
     }
 
     // ---- ATHROW ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#throwIt()java.lang.String",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "throwIt", descriptor = "()Ljava/lang/String;")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.ATHROW)]),
-        where = ""
+        predicate = ""
     )
     fun onAthrow(theatre: Theatre) {
         athrowHits++
     }
 
     // ---- RETURN（IRETURN）----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#arithmetic(int)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "arithmetic", descriptor = "(I)I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.IRETURN)]),
-        where = ""
+        predicate = ""
     )
     fun onReturn(theatre: Theatre) {
         returnHits++
     }
 
     // ---- 3 步序列：LDC; LDC; INVOKEVIRTUAL ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#loadStrings()java.lang.String",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "loadStrings", descriptor = "()Ljava/lang/String;")]),
         pattern = InsnPattern(
+            mode = PatternMode.ORDERED_SUBSEQUENCE,
             steps = [
                 Step(opcode = Op.LDC),
                 Step(opcode = Op.LDC),
                 Step(opcode = Op.INVOKEVIRTUAL),
             ]
         ),
-        where = ""
+        predicate = ""
     )
     fun onSeq3(theatre: Theatre) {
         seq3Hits++
     }
 
     // ---- 空 steps 数组（退化为无模式匹配） ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#emptyBody()V",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "emptyBody", descriptor = "()V")]),
         pattern = InsnPattern(steps = []),
-        where = ""
+        predicate = ""
     )
     fun onEmptyPattern(theatre: Theatre) {
         emptyStepsHits++
     }
 
     // ---- 5 步序列 ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#densePattern()int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "densePattern", descriptor = "()I")]),
         pattern = InsnPattern(
+            mode = PatternMode.ORDERED_SUBSEQUENCE,
             steps = [
                 Step(opcode = Op.ICONST_0),
                 Step(opcode = Op.ICONST_1),
@@ -382,127 +374,115 @@ object SurgeonInsnPatternCases {
                 Step(opcode = Op.ILOAD),
             ]
         ),
-        where = ""
+        predicate = ""
     )
     fun onSeq5(theatre: Theatre) {
         seq5Hits++
     }
 
     // ---- repeat = 2 ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#multiFieldPut()int",
-        pattern = InsnPattern(steps = [Step(opcode = Op.PUTFIELD, repeat = 2)]),
-        where = ""
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "multiFieldPut", descriptor = "()I")]),
+        pattern = InsnPattern(mode = PatternMode.ORDERED_SUBSEQUENCE, steps = [Step(opcode = Op.PUTFIELD, repeat = 2)]),
+        predicate = ""
     )
     fun onRepeat2(theatre: Theatre) {
         repeat2Hits++
     }
 
     // ---- repeat = 5 ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#multiFieldPut()int",
-        pattern = InsnPattern(steps = [Step(opcode = Op.PUTFIELD, repeat = 5)]),
-        where = ""
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "multiFieldPut", descriptor = "()I")]),
+        pattern = InsnPattern(mode = PatternMode.ORDERED_SUBSEQUENCE, steps = [Step(opcode = Op.PUTFIELD, repeat = 5)]),
+        predicate = ""
     )
     fun onRepeat5(theatre: Theatre) {
         repeat5Hits++
     }
 
     // ---- cst 数字过滤 ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#numberLdc()long",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "numberLdc", descriptor = "()J")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.LDC, cst = "12345678901")]),
-        where = ""
+        predicate = ""
     )
     fun onCstNumeric(theatre: Theatre) {
         cstNumericHits++
     }
 
     // ---- glob owner = `java/lang/*` ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#staticCalls()int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "staticCalls", descriptor = "()I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.INVOKESTATIC, owner = "java/lang/*")]),
-        where = ""
+        predicate = ""
     )
     fun onGlobOwnerJavaLang(theatre: Theatre) {
         globOwnerJavaLangHits++
     }
 
     // ---- glob name 后缀 `*max` ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#staticCalls()int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "staticCalls", descriptor = "()I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.INVOKESTATIC, name = "*max")]),
-        where = ""
+        predicate = ""
     )
     fun onGlobNameSuffix(theatre: Theatre) {
         globNameSuffixHits++
     }
 
     // ---- glob desc `(*)int` ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#staticCalls()int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "staticCalls", descriptor = "()I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.INVOKESTATIC, desc = "(*)int")]),
-        where = ""
+        predicate = ""
     )
     fun onGlobDesc(theatre: Theatre) {
         globDescHits++
     }
 
     // ---- desc 精确匹配 `(II)I` ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#staticCalls()int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "staticCalls", descriptor = "()I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.INVOKESTATIC, desc = "(II)I")]),
-        where = ""
+        predicate = ""
     )
     fun onDescExact(theatre: Theatre) {
         descExactHits++
     }
 
     // ---- INVOKEINTERFACE ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#interfaceCall(java.util.List)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "interfaceCall", descriptor = "(Ljava/util/List;)I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.INVOKEINTERFACE)]),
-        where = ""
+        predicate = ""
     )
     fun onInvokeInterface(theatre: Theatre) {
         invokeInterfaceHits++
     }
 
     // ---- INVOKESPECIAL（constructor） ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#buildBuffer()java.lang.String",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "buildBuffer", descriptor = "()Ljava/lang/String;")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.INVOKESPECIAL, name = "<init>")]),
-        where = ""
+        predicate = ""
     )
     fun onInvokeSpecial(theatre: Theatre) {
         invokeSpecialHits++
     }
 
     // ---- ARRAYLENGTH ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#arrays()int",
-        pattern = InsnPattern(steps = [Step(opcode = Op.ARRAYLENGTH, repeat = 2)]),
-        where = ""
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "arrays", descriptor = "()I")]),
+        pattern = InsnPattern(mode = PatternMode.ORDERED_SUBSEQUENCE, steps = [Step(opcode = Op.ARRAYLENGTH, repeat = 2)]),
+        predicate = ""
     )
     fun onArrayLength(theatre: Theatre) {
         arrayLengthHits++
     }
 
     // ---- NOP（Op 枚举存在但通常无 NOP 指令，作为冷门 opcode 样本） ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#emptyBody()V",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "emptyBody", descriptor = "()V")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.NOP)]),
-        where = ""
+        predicate = ""
     )
     fun onNop(theatre: Theatre) {
         nopHits++
     }
 
     // ---- DUP ----
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#buildBuffer()java.lang.String",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "buildBuffer", descriptor = "()Ljava/lang/String;")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.DUP)]),
-        where = ""
+        predicate = ""
     )
     fun onDup(theatre: Theatre) {
         dupHits++

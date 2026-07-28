@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Bypass
 import taboolib.module.incision.annotation.Excise
 import taboolib.module.incision.annotation.Graft
@@ -84,223 +92,190 @@ object SurgeonPredicateCases {
 
     // ==================== 保留：旧脚手架测试 ====================
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#spawn(java.lang.String,int)java.lang.String",
-        where = "args[0] == \"dragon\" && args[1] >= 50"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "spawn", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]),
+        predicate = "args[0] == \"dragon\" && args[1] >= 50"
     )
     fun onSpawnDragon(theatre: Theatre) { dragonHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#spawn(java.lang.String,int)java.lang.String",
-        where = "args[1] < 10"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "spawn", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]),
+        predicate = "args[1] < 10"
     )
     fun onSpawnLowLevel(theatre: Theatre) { anyLowLevelHits++ }
 
     // ==================== 比较算子 ====================
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#log(java.lang.String)java.lang.String",
-        where = "args[0] == \"hello\""
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "log", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]),
+        predicate = "args[0] == \"hello\""
     )
     fun onLogEqString(theatre: Theatre) { eqStringHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#spawn(java.lang.String,int)java.lang.String",
-        where = "args[1] != 0"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "spawn", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]),
+        predicate = "args[1] != 0"
     )
     fun onSpawnNeqInt(theatre: Theatre) { neqIntHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#measure(double)java.lang.String",
-        where = "args[0] < 10"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "measure", descriptor = "(D)Ljava/lang/String;")]),
+        predicate = "args[0] < 10"
     )
     fun onMeasureLt(theatre: Theatre) { ltHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#measure(double)java.lang.String",
-        where = "args[0] > 100"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "measure", descriptor = "(D)Ljava/lang/String;")]),
+        predicate = "args[0] > 100"
     )
     fun onMeasureGt(theatre: Theatre) { gtHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#spawn(java.lang.String,int)java.lang.String",
-        where = "args[1] <= 5"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "spawn", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]),
+        predicate = "args[1] <= 5"
     )
     fun onSpawnLe(theatre: Theatre) { leHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#spawn(java.lang.String,int)java.lang.String",
-        where = "args[1] >= 100"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "spawn", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]),
+        predicate = "args[1] >= 100"
     )
     fun onSpawnGe(theatre: Theatre) { geHits++ }
 
     // ==================== matches / in ====================
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#log(java.lang.String)java.lang.String",
-        where = "args[0] matches \"hello.*\""
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "log", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]),
+        predicate = "args[0] matches \"hello.*\""
     )
     fun onLogMatches(theatre: Theatre) { matchesHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#log(java.lang.String)java.lang.String",
-        where = "\"lo\" in args[0]"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "log", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]),
+        predicate = "\"lo\" in args[0]"
     )
     fun onLogInString(theatre: Theatre) { inStringHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#handle(java.util.List)java.lang.String",
-        where = "\"key\" in args[0]"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "handle", descriptor = "(Ljava/util/List;)Ljava/lang/String;")]),
+        predicate = "\"key\" in args[0]"
     )
     fun onHandleInList(theatre: Theatre) { inListHits++ }
 
     // ==================== 类型算子 ====================
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#accept(java.lang.Object)java.lang.String",
-        where = "args[0] is java.lang.String"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "accept", descriptor = "(Ljava/lang/Object;)Ljava/lang/String;")]),
+        predicate = "args[0] is java.lang.String"
     )
     fun onAcceptIsString(theatre: Theatre) { isStringHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#accept(java.lang.Object)java.lang.String",
-        where = "args[0] !is java.lang.Integer"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "accept", descriptor = "(Ljava/lang/Object;)Ljava/lang/String;")]),
+        predicate = "args[0] !is java.lang.Integer"
     )
     fun onAcceptNotIsInt(theatre: Theatre) { notIsIntHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#handle(java.util.List)java.lang.String",
-        where = "args[0] ic java.util.List"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "handle", descriptor = "(Ljava/util/List;)Ljava/lang/String;")]),
+        predicate = "args[0] ic java.util.List"
     )
     fun onHandleIcList(theatre: Theatre) { icListHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#accept(java.lang.Object)java.lang.String",
-        where = "args[0] ip java.lang.Object"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "accept", descriptor = "(Ljava/lang/Object;)Ljava/lang/String;")]),
+        predicate = "args[0] ip java.lang.Object"
     )
     fun onAcceptIpObject(theatre: Theatre) { ipObjectHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#trigger(java.lang.String)java.lang.String",
-        where = "args[0] it java.lang.String"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "trigger", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]),
+        predicate = "args[0] it java.lang.String"
     )
     fun onTriggerItExact(theatre: Theatre) { itExactHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#accept(java.lang.Object)java.lang.String",
-        where = "args[0] !it java.lang.String"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "accept", descriptor = "(Ljava/lang/Object;)Ljava/lang/String;")]),
+        predicate = "args[0] !it java.lang.String"
     )
     fun onAcceptNotIt(theatre: Theatre) { notItHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#accept(java.lang.Object)java.lang.String",
-        where = "(args[0] as java.lang.String) == \"casted\""
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "accept", descriptor = "(Ljava/lang/Object;)Ljava/lang/String;")]),
+        predicate = "(args[0] as java.lang.String) == \"casted\""
     )
     fun onAcceptAsCast(theatre: Theatre) { asCastHits++ }
 
     // ==================== 属性访问 / 方法调用 ====================
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#register(top.maplex.incisiontest.fixture.PredicateFixture\$Named)java.lang.String",
-        where = "args[0].name == \"foo\""
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "register", descriptor = "(Ltop/maplex/incisiontest/fixture/PredicateFixture\$Named;)Ljava/lang/String;")]),
+        predicate = "args[0].name == \"foo\""
     )
     fun onRegisterProperty(theatre: Theatre) { propertyHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#register(top.maplex.incisiontest.fixture.PredicateFixture\$Named)java.lang.String",
-        where = "args[0].size > 0"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "register", descriptor = "(Ltop/maplex/incisiontest/fixture/PredicateFixture\$Named;)Ljava/lang/String;")]),
+        predicate = "args[0].size > 0"
     )
     fun onRegisterPropertySize(theatre: Theatre) { propertySizeHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#register(top.maplex.incisiontest.fixture.PredicateFixture\$Named)java.lang.String",
-        where = "args[0].startsWith(\"foo\")"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "register", descriptor = "(Ltop/maplex/incisiontest/fixture/PredicateFixture\$Named;)Ljava/lang/String;")]),
+        predicate = "args[0].startsWith(\"foo\")"
     )
     fun onRegisterMethodCall(theatre: Theatre) { methodCallHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#register(top.maplex.incisiontest.fixture.PredicateFixture\$Named)java.lang.String",
-        where = "args[0].length() >= 3"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "register", descriptor = "(Ltop/maplex/incisiontest/fixture/PredicateFixture\$Named;)Ljava/lang/String;")]),
+        predicate = "args[0].length() >= 3"
     )
     fun onRegisterMethodNoArg(theatre: Theatre) { methodNoArgHits++ }
 
     // 安全调用 `?.`：null 入参时 name 返回 null，整体 `== "x"` → false，不命中
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#touch(top.maplex.incisiontest.fixture.PredicateFixture\$Named)java.lang.String",
-        where = "args[0]?.name == \"x\""
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "touch", descriptor = "(Ltop/maplex/incisiontest/fixture/PredicateFixture\$Named;)Ljava/lang/String;")]),
+        predicate = "args[0]?.name == \"x\""
     )
     fun onTouchSafeCall(theatre: Theatre) { safeCallHits++ }
 
     // ==================== 布尔组合 ====================
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#spawn(java.lang.String,int)java.lang.String",
-        where = "args[0] == \"combo\" && args[1] > 5"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "spawn", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]),
+        predicate = "args[0] == \"combo\" && args[1] > 5"
     )
     fun onSpawnAnd(theatre: Theatre) { andHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#spawn(java.lang.String,int)java.lang.String",
-        where = "args[0] == \"x\" || args[1] > 1000"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "spawn", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]),
+        predicate = "args[0] == \"x\" || args[1] > 1000"
     )
     fun onSpawnOr(theatre: Theatre) { orHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#spawn(java.lang.String,int)java.lang.String",
-        where = "!(args[0] == \"skip\")"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "spawn", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]),
+        predicate = "!(args[0] == \"skip\")"
     )
     fun onSpawnNot(theatre: Theatre) { notHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#spawn(java.lang.String,int)java.lang.String",
-        where = "!((args[0] == \"a\" && args[1] < 10) || args[0] == \"b\")"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "spawn", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]),
+        predicate = "!((args[0] == \"a\" && args[1] < 10) || args[0] == \"b\")"
     )
     fun onSpawnNested(theatre: Theatre) { nestedHits++ }
 
     // ==================== 字面量 ====================
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#flag(java.lang.Object)java.lang.String",
-        where = "true"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "flag", descriptor = "(Ljava/lang/Object;)Ljava/lang/String;")]),
+        predicate = "true"
     )
     fun onFlagTrue(theatre: Theatre) { literalTrueHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#flag(java.lang.Object)java.lang.String",
-        where = "false"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "flag", descriptor = "(Ljava/lang/Object;)Ljava/lang/String;")]),
+        predicate = "false"
     )
     fun onFlagFalse(theatre: Theatre) { literalFalseHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#flag(java.lang.Object)java.lang.String",
-        where = "args[0] == null"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "flag", descriptor = "(Ljava/lang/Object;)Ljava/lang/String;")]),
+        predicate = "args[0] == null"
     )
     fun onFlagNull(theatre: Theatre) { literalNullHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#measure(double)java.lang.String",
-        where = "args[0] == 3.14"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "measure", descriptor = "(D)Ljava/lang/String;")]),
+        predicate = "args[0] == 3.14"
     )
     fun onMeasureDouble(theatre: Theatre) { literalDoubleHits++ }
 
     // ==================== 复合与 this ====================
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#spawn(java.lang.String,int)java.lang.String",
-        where = "args[0] matches \"mob_.*\" && args[1] >= 10 && args[1] <= 100 && !(args[0] == \"mob_ignored\")"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "spawn", descriptor = "(Ljava/lang/String;I)Ljava/lang/String;")]),
+        predicate = "args[0] matches \"mob_.*\" && args[1] >= 10 && args[1] <= 100 && !(args[0] == \"mob_ignored\")"
     )
     fun onSpawnCompound(theatre: Theatre) { compoundHits++ }
 
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#log(java.lang.String)java.lang.String",
-        where = "this is top.maplex.incisiontest.fixture.PredicateFixture"
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "log", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]),
+        predicate = "this is top.maplex.incisiontest.fixture.PredicateFixture"
     )
     fun onLogThisRef(theatre: Theatre) { thisRefHits++ }
 
     // ==================== where 字段在每个注解上的覆盖 ====================
     // 目标：验证 where 不仅 @Lead 可用，对 @Trail/@Splice/@Excise/@Bypass/@Graft/@Trim 同样生效。
 
-    @Volatile var emptyWhereHits = 0   // where="" 基线：不过滤
+    @Volatile var emptyWhereHits = 0   // predicate ="" 基线：不过滤
     @Volatile var trailWhereHits = 0   // @Trail + where
     @Volatile var spliceWhereHits = 0  // @Splice + where
     @Volatile var exciseWhereHits = 0  // @Excise + where
@@ -318,24 +293,21 @@ object SurgeonPredicateCases {
         trimWhereHits = 0
     }
 
-    /** where="" 基线：所有调用都命中（不过滤）。 */
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#whereEmpty(int)int",
-        where = ""
+    /** predicate ="" 基线：所有调用都命中（不过滤）。 */
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "whereEmpty", descriptor = "(I)I")]),
+        predicate = ""
     )
     fun onEmptyWhere(theatre: Theatre) { emptyWhereHits++ }
 
     /** @Trail + where：方法返回时，仅当 args[0] > 0 命中。 */
-    @Trail(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#whereTrail(int)int",
-        where = "args[0] > 0"
+    @Trail(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "whereTrail", descriptor = "(I)I")]),
+        predicate = "args[0] > 0"
     )
     fun onTrailWithWhere(theatre: Theatre) { trailWhereHits++ }
 
     /** @Splice + where：仅 args[0] >= 100 时由 advice 接管，其余 proceed 放行。 */
-    @Splice(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#whereSplice(int)int",
-        where = "args[0] >= 100"
+    @Splice(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "whereSplice", descriptor = "(I)I")]),
+        predicate = "args[0] >= 100"
     )
     fun onSpliceWithWhere(theatre: Theatre): Any? {
         spliceWhereHits++
@@ -344,9 +316,8 @@ object SurgeonPredicateCases {
     }
 
     /** @Excise + where：仅 args[0]=="cut" 时整段替换返回 "excised"，否则原方法执行。 */
-    @Excise(
-        scope = "method:top.maplex.incisiontest.fixture.PredicateFixture#whereExcise(java.lang.String)java.lang.String",
-        where = "args[0] == \"cut\""
+    @Excise(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "whereExcise", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]),
+        predicate = "args[0] == \"cut\""
     )
     fun onExciseWithWhere(theatre: Theatre): Any? {
         exciseWhereHits++
@@ -354,13 +325,12 @@ object SurgeonPredicateCases {
     }
 
     /** @Bypass + where：替换 whereBypass 内对 whereBypassHelper 的调用，仅 args[0] > 50 启用。 */
-    @Bypass(
-        method = "top.maplex.incisiontest.fixture.PredicateFixture#whereBypass(int)int",
+    @Bypass(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "whereBypass", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.PredicateFixture#whereBypassHelper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "whereBypassHelper", descriptor = "(I)I"),
         ),
-        where = "args[0] > 50"
+        predicate = "args[0] > 50"
     )
     fun onBypassWithWhere(theatre: Theatre): Any? {
         bypassWhereHits++
@@ -368,22 +338,20 @@ object SurgeonPredicateCases {
     }
 
     /** @Graft + where：在 whereGraft 调用 whereGraftHelper 之前植入，仅 args[0] >= 10 触发。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.PredicateFixture#whereGraft(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "whereGraft", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.PredicateFixture#whereGraftHelper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "whereGraftHelper", descriptor = "(I)I"),
         ),
-        where = "args[0] >= 10"
+        predicate = "args[0] >= 10"
     )
     fun onGraftWithWhere(theatre: Theatre) { graftWhereHits++ }
 
     /** @Trim ARG + where：仅当原参数 > 0 时改写 index=0。 */
-    @Trim(
-        method = "top.maplex.incisiontest.fixture.PredicateFixture#whereTrim(int)int",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/PredicateFixture", name = "whereTrim", descriptor = "(I)I")]),
         kind = Trim.Kind.ARG,
         index = 0,
-        where = "args[0] > 0"
+        predicate = "args[0] > 0"
     )
     fun onTrimArgWithWhere(theatre: Theatre): Any? {
         trimWhereHits++

@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.fixture
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 /**
  * [top.maplex.incisiontest.cases.SurgeonPredicateCases] 专属 fixture。
  *
@@ -68,7 +76,7 @@ class PredicateFixture {
         return "flag:$value"
     }
 
-    /** where 基线：where="" 应等价于不过滤，所有调用均命中。 */
+    /** where 基线：predicate ="" 应等价于不过滤，所有调用均命中。 */
     fun whereEmpty(value: Int): Int { hits++; return value }
 
     /** @Trail 上的 where：args[0] > 0 才计数尾部。返回值用于断言原方法仍执行。 */

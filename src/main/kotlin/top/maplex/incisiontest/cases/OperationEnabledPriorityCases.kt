@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Operation
 import taboolib.module.incision.annotation.Surgeon
@@ -29,50 +37,50 @@ object OperationEnabledPriorityCases {
 
     // ---- enabled=true 行 ----
     @Operation(enabled = true, priority = -10)
-    @Lead(scope = "method:$FIX#cellTPriNeg10()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "cellTPriNeg10", descriptor = "()I")]))
     fun aTNeg10(theatre: Theatre) { tNeg10Hits++ }
 
     @Operation(enabled = true, priority = 0)
-    @Lead(scope = "method:$FIX#cellTPri0()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "cellTPri0", descriptor = "()I")]))
     fun aT0(theatre: Theatre) { t0Hits++ }
 
     @Operation(enabled = true, priority = 5)
-    @Lead(scope = "method:$FIX#cellTPri5()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "cellTPri5", descriptor = "()I")]))
     fun aT5(theatre: Theatre) { t5Hits++ }
 
     @Operation(enabled = true, priority = 100)
-    @Lead(scope = "method:$FIX#cellTPri100()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "cellTPri100", descriptor = "()I")]))
     fun aT100(theatre: Theatre) { t100Hits++ }
 
     // ---- enabled=false 行（默认禁用） ----
     @Operation(enabled = false, priority = -10)
-    @Lead(scope = "method:$FIX#cellFPriNeg10()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "cellFPriNeg10", descriptor = "()I")]))
     fun aFNeg10(theatre: Theatre) { fNeg10Hits++ }
 
     @Operation(enabled = false, priority = 0)
-    @Lead(scope = "method:$FIX#cellFPri0()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "cellFPri0", descriptor = "()I")]))
     fun aF0(theatre: Theatre) { f0Hits++ }
 
     @Operation(enabled = false, priority = 5)
-    @Lead(scope = "method:$FIX#cellFPri5()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "cellFPri5", descriptor = "()I")]))
     fun aF5(theatre: Theatre) { f5Hits++ }
 
     @Operation(enabled = false, priority = 100)
-    @Lead(scope = "method:$FIX#cellFPri100()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "cellFPri100", descriptor = "()I")]))
     fun aF100(theatre: Theatre) { f100Hits++ }
 
     // ---- 同 priority 稳定顺序：两条 priority=42 advice ----
     @Operation(priority = 42, id = "same-pri-first")
-    @Lead(scope = "method:$FIX#samePriorityTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "samePriorityTarget", descriptor = "()Ljava/util/List;")]))
     fun samePriorityFirst(theatre: Theatre) { samePriorityLog += "first" }
 
     @Operation(priority = 42, id = "same-pri-second")
-    @Lead(scope = "method:$FIX#samePriorityTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "samePriorityTarget", descriptor = "()Ljava/util/List;")]))
     fun samePrioritySecond(theatre: Theatre) { samePriorityLog += "second" }
 
     // ---- disable→resume→suspend 循环测试目标 ----
     @Operation(enabled = false, id = "cycle-advice")
-    @Lead(scope = "method:$FIX#cycleTarget()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "cycleTarget", descriptor = "()I")]))
     fun cycleAdvice(theatre: Theatre) { cycleHits++ }
 
     fun reset() {

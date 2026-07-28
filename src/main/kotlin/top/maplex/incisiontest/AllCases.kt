@@ -1,5 +1,13 @@
 package top.maplex.incisiontest
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import org.bukkit.Bukkit
 import taboolib.module.incision.annotation.SurgeryDesk
 import taboolib.module.incision.api.Suture
@@ -72,6 +80,8 @@ import top.maplex.incisiontest.fixture.GreetableImpl
 import top.maplex.incisiontest.cases.AccessorCases
 import top.maplex.incisiontest.cases.AccessorTheatreDslCases
 import top.maplex.incisiontest.cases.AccessorUtilCases
+import top.maplex.incisiontest.cases.AdyeshachIntegrationTests
+import top.maplex.incisiontest.cases.BackendContractCases
 import top.maplex.incisiontest.fixture.TargetFixture
 
 private const val TARGET = "top.maplex.incisiontest.fixture.TargetFixture"
@@ -98,6 +108,13 @@ private const val WILDCARD = "$TARGET#greet(*)"
 object AllCases {
 
     val entries: List<Pair<String, () -> CaseResult>> = listOf(
+        "backend-unavailable" to BackendContractCases::testUnavailable,
+        "backend-pending-load" to BackendContractCases::testPendingLoad,
+        "backend-installed" to BackendContractCases::testInstalled,
+        "backend-retransform-rollback" to BackendContractCases::testRetransformRollback,
+        "backend-transformer-rollback" to BackendContractCases::testTransformerRollback,
+        "backend-pipeline-lifecycle" to BackendContractCases::testPipelineLifecycle,
+        "backend-classloader-hook-unavailable" to BackendContractCases::testClassLoaderHookUnavailable,
         "lead" to ::testLead,
         "trail" to ::testTrail,
         "trail-throw" to ::testTrailOnThrow,
@@ -232,6 +249,9 @@ object AllCases {
         "cross-cl-nms-ishardcore" to ::testCrossClNmsIsHardcore,
         "cross-cl-nms-playercount" to ::testCrossClNmsPlayerCount,
         "cross-cl-bukkit-maxplayers" to ::testCrossClBukkitMaxPlayers,
+        // 真实跨插件 ClassLoader 侵入；未安装 Adyeshach 时单独记为 NOT_APPLICABLE。
+        "adyeshach-api-invasion" to AdyeshachIntegrationTests::testApi,
+        "adyeshach-nms-helper-invasion" to AdyeshachIntegrationTests::testNmsHelper,
         "bukkit-max-players" to ::testBukkitMaxPlayers,
         "bukkit-view-distance" to ::testBukkitViewDistance,
         "nms-motd" to ::testNmsMotd,
@@ -605,7 +625,8 @@ object AllCases {
             lead(STATICECHO) { _ -> hits++ }
         }
         try {
-            val r = TargetFixture.staticEcho("S")
+            // Kotlin 对 @JvmStatic 的源码调用仍会编译为 Companion invokevirtual；反射才能硬性验证外部静态桥。
+            val r = TargetFixture::class.java.getDeclaredMethod("staticEcho", String::class.java).invoke(null, "S") as String
             a.equal("static:S", r, "静态方法返回")
             a.equal(1, hits, "静态方法 lead 命中")
         } finally { s.heal() }
@@ -667,7 +688,7 @@ object AllCases {
         }
         try {
             fx.greet("a")
-            a.equal(1, hits, "where=true 应触发")
+            a.equal(1, hits, "predicate =true 应触发")
         } finally { s.heal() }
     }
 
@@ -678,7 +699,7 @@ object AllCases {
         }
         try {
             fx.greet("a")
-            a.equal(0, hits, "where=false 不应触发")
+            a.equal(0, hits, "predicate =false 不应触发")
         } finally { s.heal() }
     }
 
@@ -991,7 +1012,7 @@ object AllCases {
 
     fun testSurgeonAopStaticTarget(): CaseResult = runCase("surgeon-aop-static-target") { a, _ ->
         SurgeonAopCases.reset()
-        val r = SurgeonAopTargetFixture.staticEcho("demo")
+        val r = SurgeonAopTargetFixture::class.java.getDeclaredMethod("staticEcho", String::class.java).invoke(null, "demo") as String
         a.equal("static:demo", r, "静态桥目标返回值保持不变")
         a.check(SurgeonAopCases.staticLeadHits >= 1, "@KotlinTarget(jvmStaticBridge=true) 命中静态桥")
     }
@@ -1327,7 +1348,7 @@ object AllCases {
     fun testKotlinTargetJvmStaticOnly(): CaseResult = runCase("kotlintarget-jvmstatic-only") { a, _ ->
         SurgeonKotlinTargetCases.reset()
         SurgeonKotlinTargetFixture.staticOnlyHits = 0
-        val r = SurgeonKotlinTargetFixture.staticOnlyEcho("v")
+        val r = SurgeonKotlinTargetFixture::class.java.getDeclaredMethod("staticOnlyEcho", String::class.java).invoke(null, "v") as String
         a.equal("static-only:v", r, "@JvmStatic 静态桥返回值未变")
         a.check(SurgeonKotlinTargetCases.staticOnlyHits >= 1, "@KotlinTarget(jvmStaticBridge=true) 命中")
     }
@@ -1336,7 +1357,7 @@ object AllCases {
     fun testKotlinTargetBothStaticPath(): CaseResult = runCase("kotlintarget-both-static-path") { a, _ ->
         SurgeonKotlinTargetCases.reset()
         SurgeonKotlinTargetFixture.bothCallHits = 0
-        val r = SurgeonKotlinTargetFixture.bothEcho("v")
+        val r = SurgeonKotlinTargetFixture::class.java.getDeclaredMethod("bothEcho", String::class.java).invoke(null, "v") as String
         a.equal("both:v", r, "返回值未变")
         a.check(SurgeonKotlinTargetCases.bothStaticPathHits >= 1, "静态桥 advice 命中 (hits=${SurgeonKotlinTargetCases.bothStaticPathHits})")
         a.note("companion 路径同时观察到 hits=${SurgeonKotlinTargetCases.bothCompanionPathHits}")
@@ -1487,7 +1508,7 @@ object AllCases {
 
     fun testKTargetMatrixFT(): CaseResult = runCase("ktarget-matrix-ft") { a, _ ->
         KotlinTargetMatrixCases.reset()
-        val r = KotlinTargetMatrixFixture.ftStaticEcho("x")
+        val r = KotlinTargetMatrixFixture::class.java.getDeclaredMethod("ftStaticEcho", String::class.java).invoke(null, "x") as String
         a.equal("ft:x", r, "FT @JvmStatic 静态桥返回值未变")
         a.check(KotlinTargetMatrixCases.ftHits >= 1, "FT (jvmStaticBridge=true) 命中 (hits=${KotlinTargetMatrixCases.ftHits})")
     }
@@ -1501,7 +1522,7 @@ object AllCases {
 
     fun testKTargetMatrixTTStatic(): CaseResult = runCase("ktarget-matrix-tt-static") { a, _ ->
         KotlinTargetMatrixCases.reset()
-        val r = KotlinTargetMatrixFixture.ttBothEcho("x")
+        val r = KotlinTargetMatrixFixture::class.java.getDeclaredMethod("ttBothEcho", String::class.java).invoke(null, "x") as String
         a.equal("tt:x", r, "TT 静态桥返回值未变")
         a.check(KotlinTargetMatrixCases.ttStaticPathHits >= 1, "TT 静态桥 advice 命中 (hits=${KotlinTargetMatrixCases.ttStaticPathHits})")
         a.note("companion 路径同次观察 hits=${KotlinTargetMatrixCases.ttCompanionPathHits}")
@@ -1685,7 +1706,7 @@ object AllCases {
 
     fun testKTargetFTAlt(): CaseResult = runCase("ktarget-ft-alt") { a, _ ->
         KotlinTargetMatrixCases.reset()
-        val r = KotlinTargetMatrixFixture.ftStaticAlt(6)
+        val r = KotlinTargetMatrixFixture::class.java.getDeclaredMethod("ftStaticAlt", Int::class.javaPrimitiveType).invoke(null, 6) as Int
         a.equal(12, r, "FT 第二个目标返回 input*2")
         a.check(KotlinTargetMatrixCases.ftAltHits >= 1, "FT 第二个 advice 命中")
     }
@@ -1699,7 +1720,7 @@ object AllCases {
 
     fun testKTargetTTAltStatic(): CaseResult = runCase("ktarget-tt-alt-static") { a, _ ->
         KotlinTargetMatrixCases.reset()
-        val r = KotlinTargetMatrixFixture.ttBothAlt(50)
+        val r = KotlinTargetMatrixFixture::class.java.getDeclaredMethod("ttBothAlt", Int::class.javaPrimitiveType).invoke(null, 50) as Int
         a.equal(49, r, "TT 第二个目标返回 input-1")
         a.check(KotlinTargetMatrixCases.ttAltStaticPathHits >= 1, "TT 第二个 静态桥 advice 命中")
     }
@@ -1802,7 +1823,7 @@ object AllCases {
         fx.spawn("dragon", 99)   // 命中
         fx.spawn("dragon", 10)   // level<50 过滤
         fx.spawn("zombie", 99)   // name 过滤
-        a.equal(1, SurgeonPredicateCases.dragonHits, "where=args[0]==dragon && args[1]>=50 仅 dragon@99 命中")
+        a.equal(1, SurgeonPredicateCases.dragonHits, "predicate =args[0]==dragon && args[1]>=50 仅 dragon@99 命中")
     }
 
     fun testSurgeonWhereLowLevel(): CaseResult = runCase("surgeon-where-low-level") { a, _ ->
@@ -1810,7 +1831,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.spawn("zombie", 5)    // 命中
         fx.spawn("zombie", 50)   // 不命中
-        a.equal(1, SurgeonPredicateCases.anyLowLevelHits, "where=args[1]<10 仅 level=5 命中")
+        a.equal(1, SurgeonPredicateCases.anyLowLevelHits, "predicate =args[1]<10 仅 level=5 命中")
     }
 
     // ====================================================================
@@ -1824,7 +1845,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.log("hello")  // 命中
         fx.log("world")  // 拒绝
-        a.equal(1, SurgeonPredicateCases.eqStringHits, "where=args[0]==\"hello\" 仅 hello 命中")
+        a.equal(1, SurgeonPredicateCases.eqStringHits, "predicate =args[0]==\"hello\" 仅 hello 命中")
     }
 
     fun testWhereNeqInt(): CaseResult = runCase("where-neq-int") { a, _ ->
@@ -1832,7 +1853,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.spawn("x", 5)  // 命中 (5!=0)
         fx.spawn("x", 0)  // 拒绝
-        a.equal(1, SurgeonPredicateCases.neqIntHits, "where=args[1]!=0 仅非零命中")
+        a.equal(1, SurgeonPredicateCases.neqIntHits, "predicate =args[1]!=0 仅非零命中")
     }
 
     fun testWhereLt(): CaseResult = runCase("where-lt") { a, _ ->
@@ -1840,7 +1861,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.measure(5.0)   // 命中
         fx.measure(20.0)  // 拒绝
-        a.equal(1, SurgeonPredicateCases.ltHits, "where=args[0]<10 仅 5.0 命中")
+        a.equal(1, SurgeonPredicateCases.ltHits, "predicate =args[0]<10 仅 5.0 命中")
     }
 
     fun testWhereGt(): CaseResult = runCase("where-gt") { a, _ ->
@@ -1848,7 +1869,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.measure(200.0)  // 命中
         fx.measure(50.0)   // 拒绝
-        a.equal(1, SurgeonPredicateCases.gtHits, "where=args[0]>100 仅 200.0 命中")
+        a.equal(1, SurgeonPredicateCases.gtHits, "predicate =args[0]>100 仅 200.0 命中")
     }
 
     fun testWhereLe(): CaseResult = runCase("where-le") { a, _ ->
@@ -1856,7 +1877,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.spawn("x", 5)   // 命中 (<=5)
         fx.spawn("x", 6)   // 拒绝
-        a.equal(1, SurgeonPredicateCases.leHits, "where=args[1]<=5 仅 5 命中")
+        a.equal(1, SurgeonPredicateCases.leHits, "predicate =args[1]<=5 仅 5 命中")
     }
 
     fun testWhereGe(): CaseResult = runCase("where-ge") { a, _ ->
@@ -1864,7 +1885,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.spawn("x", 100)  // 命中
         fx.spawn("x", 99)   // 拒绝
-        a.equal(1, SurgeonPredicateCases.geHits, "where=args[1]>=100 仅 100 命中")
+        a.equal(1, SurgeonPredicateCases.geHits, "predicate =args[1]>=100 仅 100 命中")
     }
 
     // ---- matches / in ----
@@ -1874,7 +1895,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.log("hello, world")  // 命中 hello.*
         fx.log("goodbye")       // 拒绝
-        a.equal(1, SurgeonPredicateCases.matchesHits, "where=args[0] matches \"hello.*\" 仅 hello, world 命中")
+        a.equal(1, SurgeonPredicateCases.matchesHits, "predicate =args[0] matches \"hello.*\" 仅 hello, world 命中")
     }
 
     fun testWhereInString(): CaseResult = runCase("where-in-string") { a, _ ->
@@ -1882,7 +1903,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.log("below")   // 命中 "lo" in "below"
         fx.log("abc")     // 拒绝
-        a.equal(1, SurgeonPredicateCases.inStringHits, "where=\"lo\" in args[0] 仅含 lo 命中")
+        a.equal(1, SurgeonPredicateCases.inStringHits, "predicate =\"lo\" in args[0] 仅含 lo 命中")
     }
 
     fun testWhereInList(): CaseResult = runCase("where-in-list") { a, _ ->
@@ -1890,7 +1911,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.handle(listOf("key", "v1"))   // 命中
         fx.handle(listOf("foo", "bar"))  // 拒绝
-        a.equal(1, SurgeonPredicateCases.inListHits, "where=\"key\" in args[0] 仅含 key 命中")
+        a.equal(1, SurgeonPredicateCases.inListHits, "predicate =\"key\" in args[0] 仅含 key 命中")
     }
 
     // ---- 类型算子 ----
@@ -1900,7 +1921,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.accept("hello")   // 命中
         fx.accept(42)        // 拒绝
-        a.equal(1, SurgeonPredicateCases.isStringHits, "where=args[0] is java.lang.String 仅 String 命中")
+        a.equal(1, SurgeonPredicateCases.isStringHits, "predicate =args[0] is java.lang.String 仅 String 命中")
     }
 
     fun testWhereNotIsInt(): CaseResult = runCase("where-not-is-int") { a, _ ->
@@ -1908,7 +1929,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.accept("text")   // 命中 (!is Integer)
         fx.accept(42)       // 拒绝
-        a.equal(1, SurgeonPredicateCases.notIsIntHits, "where=args[0] !is java.lang.Integer 排除 Integer")
+        a.equal(1, SurgeonPredicateCases.notIsIntHits, "predicate =args[0] !is java.lang.Integer 排除 Integer")
     }
 
     fun testWhereIcArrayList(): CaseResult = runCase("where-ic-arraylist") { a, _ ->
@@ -1917,7 +1938,7 @@ object AllCases {
         fx.handle(arrayListOf("a"))          // 命中 (ArrayList 是 List 严格子类)
         fx.handle(java.util.Arrays.asList<Any?>("a"))
         // ic=严格子类：ArrayList != List 本体，命中；但 Arrays$ArrayList 亦非 List 本体 → 也命中
-        a.check(SurgeonPredicateCases.icListHits >= 1, "where=args[0] ic java.util.List 子类命中 (hits=${SurgeonPredicateCases.icListHits})")
+        a.check(SurgeonPredicateCases.icListHits >= 1, "predicate =args[0] ic java.util.List 子类命中 (hits=${SurgeonPredicateCases.icListHits})")
     }
 
     fun testWhereIpObject(): CaseResult = runCase("where-ip-object") { a, _ ->
@@ -1925,14 +1946,14 @@ object AllCases {
         val fx = PredicateFixture()
         fx.accept("anything")   // 命中 (任意对象都 ip Object)
         fx.accept(Any())        // 命中
-        a.equal(2, SurgeonPredicateCases.ipObjectHits, "where=args[0] ip java.lang.Object 全部命中")
+        a.equal(2, SurgeonPredicateCases.ipObjectHits, "predicate =args[0] ip java.lang.Object 全部命中")
     }
 
     fun testWhereItExact(): CaseResult = runCase("where-it-exact") { a, _ ->
         SurgeonPredicateCases.reset()
         val fx = PredicateFixture()
         fx.trigger("raw")   // args[0] 恰好是 String.class → 命中
-        a.equal(1, SurgeonPredicateCases.itExactHits, "where=args[0] it java.lang.String 命中")
+        a.equal(1, SurgeonPredicateCases.itExactHits, "predicate =args[0] it java.lang.String 命中")
     }
 
     fun testWhereNotIt(): CaseResult = runCase("where-not-it") { a, _ ->
@@ -1940,7 +1961,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.accept(42)        // 命中 (Integer != String)
         fx.accept("string")  // 拒绝 (class 完全等于 String)
-        a.equal(1, SurgeonPredicateCases.notItHits, "where=args[0] !it java.lang.String 排除精确 String")
+        a.equal(1, SurgeonPredicateCases.notItHits, "predicate =args[0] !it java.lang.String 排除精确 String")
     }
 
     fun testWhereAsCast(): CaseResult = runCase("where-as-cast") { a, _ ->
@@ -1948,7 +1969,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.accept("casted")   // 命中 (as 成功 → "casted"==\"casted\")
         fx.accept(42)         // 拒绝 (as 失败 → null → false)
-        a.equal(1, SurgeonPredicateCases.asCastHits, "where=(args[0] as String)==\"casted\" 仅 casted 命中")
+        a.equal(1, SurgeonPredicateCases.asCastHits, "predicate =(args[0] as String)==\"casted\" 仅 casted 命中")
     }
 
     // ---- 属性访问 / 方法调用 ----
@@ -1958,7 +1979,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.register(PredicateFixture.Named("foo"))   // 命中
         fx.register(PredicateFixture.Named("bar"))   // 拒绝
-        a.equal(1, SurgeonPredicateCases.propertyHits, "where=args[0].name==\"foo\" 仅 name=foo 命中")
+        a.equal(1, SurgeonPredicateCases.propertyHits, "predicate =args[0].name==\"foo\" 仅 name=foo 命中")
     }
 
     fun testWherePropertySize(): CaseResult = runCase("where-property-size") { a, _ ->
@@ -1966,7 +1987,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.register(PredicateFixture.Named("x", 5))  // 命中
         fx.register(PredicateFixture.Named("x", 0))  // 拒绝
-        a.equal(1, SurgeonPredicateCases.propertySizeHits, "where=args[0].size>0 仅 size>0 命中")
+        a.equal(1, SurgeonPredicateCases.propertySizeHits, "predicate =args[0].size>0 仅 size>0 命中")
     }
 
     fun testWhereMethodCall(): CaseResult = runCase("where-method-call") { a, _ ->
@@ -1974,7 +1995,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.register(PredicateFixture.Named("foobar"))   // 命中
         fx.register(PredicateFixture.Named("zzz"))      // 拒绝
-        a.equal(1, SurgeonPredicateCases.methodCallHits, "where=args[0].startsWith(\"foo\") 仅 foo 前缀命中")
+        a.equal(1, SurgeonPredicateCases.methodCallHits, "predicate =args[0].startsWith(\"foo\") 仅 foo 前缀命中")
     }
 
     fun testWhereMethodNoArg(): CaseResult = runCase("where-method-noarg") { a, _ ->
@@ -1982,7 +2003,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.register(PredicateFixture.Named("abc"))   // 命中 (length=3)
         fx.register(PredicateFixture.Named("ab"))    // 拒绝 (length=2)
-        a.equal(1, SurgeonPredicateCases.methodNoArgHits, "where=args[0].length()>=3 仅 abc 命中")
+        a.equal(1, SurgeonPredicateCases.methodNoArgHits, "predicate =args[0].length()>=3 仅 abc 命中")
     }
 
     fun testWhereSafeCall(): CaseResult = runCase("where-safe-call") { a, _ ->
@@ -1991,7 +2012,7 @@ object AllCases {
         fx.touch(PredicateFixture.Named("x"))   // 命中 args[0]?.name=="x"
         fx.touch(null)                          // 安全调用 → null == "x" → false
         fx.touch(PredicateFixture.Named("y"))   // 拒绝 ("y"!="x")
-        a.equal(1, SurgeonPredicateCases.safeCallHits, "where=args[0]?.name==\"x\" 仅 x 命中，null 短路为 false")
+        a.equal(1, SurgeonPredicateCases.safeCallHits, "predicate =args[0]?.name==\"x\" 仅 x 命中，null 短路为 false")
     }
 
     // ---- 布尔组合 ----
@@ -2002,7 +2023,7 @@ object AllCases {
         fx.spawn("combo", 10)   // 命中
         fx.spawn("combo", 3)    // 拒绝 (level 不 >5)
         fx.spawn("other", 10)   // 拒绝 (name 不等)
-        a.equal(1, SurgeonPredicateCases.andHits, "where=a && b 仅两个条件同时成立命中")
+        a.equal(1, SurgeonPredicateCases.andHits, "predicate =a && b 仅两个条件同时成立命中")
     }
 
     fun testWhereOr(): CaseResult = runCase("where-or") { a, _ ->
@@ -2011,7 +2032,7 @@ object AllCases {
         fx.spawn("x", 5)      // 命中 (name=x)
         fx.spawn("y", 2000)   // 命中 (level>1000)
         fx.spawn("y", 5)      // 拒绝
-        a.equal(2, SurgeonPredicateCases.orHits, "where=a || b 任一成立即命中")
+        a.equal(2, SurgeonPredicateCases.orHits, "predicate =a || b 任一成立即命中")
     }
 
     fun testWhereNotGroup(): CaseResult = runCase("where-not-group") { a, _ ->
@@ -2019,7 +2040,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.spawn("keep", 1)   // 命中 !(...=="skip")
         fx.spawn("skip", 1)   // 拒绝
-        a.equal(1, SurgeonPredicateCases.notHits, "where=!(args[0]==\"skip\") 排除 skip")
+        a.equal(1, SurgeonPredicateCases.notHits, "predicate =!(args[0]==\"skip\") 排除 skip")
     }
 
     fun testWhereNested(): CaseResult = runCase("where-nested") { a, _ ->
@@ -2029,7 +2050,7 @@ object AllCases {
         fx.spawn("a", 100)  // 内部为假 → 命中
         fx.spawn("b", 1)    // ==b 真 → 拒绝
         fx.spawn("c", 1)    // 全假 → 命中
-        a.equal(2, SurgeonPredicateCases.nestedHits, "where=!((a && b) || c) 嵌套布尔")
+        a.equal(2, SurgeonPredicateCases.nestedHits, "predicate =!((a && b) || c) 嵌套布尔")
     }
 
     // ---- 字面量 ----
@@ -2039,7 +2060,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.flag(1)
         fx.flag(null)
-        a.equal(2, SurgeonPredicateCases.literalTrueHits, "where=true 恒命中")
+        a.equal(2, SurgeonPredicateCases.literalTrueHits, "predicate =true 恒命中")
     }
 
     fun testWhereLiteralFalse(): CaseResult = runCase("where-literal-false") { a, _ ->
@@ -2047,7 +2068,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.flag(1)
         fx.flag("x")
-        a.equal(0, SurgeonPredicateCases.literalFalseHits, "where=false 永不命中")
+        a.equal(0, SurgeonPredicateCases.literalFalseHits, "predicate =false 永不命中")
     }
 
     fun testWhereLiteralNull(): CaseResult = runCase("where-literal-null") { a, _ ->
@@ -2055,7 +2076,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.flag(null)   // 命中
         fx.flag("x")    // 拒绝
-        a.equal(1, SurgeonPredicateCases.literalNullHits, "where=args[0]==null 仅 null 命中")
+        a.equal(1, SurgeonPredicateCases.literalNullHits, "predicate =args[0]==null 仅 null 命中")
     }
 
     fun testWhereLiteralDouble(): CaseResult = runCase("where-literal-double") { a, _ ->
@@ -2063,7 +2084,7 @@ object AllCases {
         val fx = PredicateFixture()
         fx.measure(3.14)  // 命中
         fx.measure(2.71)  // 拒绝
-        a.equal(1, SurgeonPredicateCases.literalDoubleHits, "where=args[0]==3.14 浮点字面量匹配")
+        a.equal(1, SurgeonPredicateCases.literalDoubleHits, "predicate =args[0]==3.14 浮点字面量匹配")
     }
 
     // ---- 复合 / this ----
@@ -2076,14 +2097,14 @@ object AllCases {
         fx.spawn("mob_zombie", 200)   // 拒绝 (level>100)
         fx.spawn("mob_ignored", 50)   // 拒绝 (黑名单)
         fx.spawn("item_sword", 50)    // 拒绝 (前缀不符)
-        a.equal(1, SurgeonPredicateCases.compoundHits, "where=matches && range && !(blacklist) 复合条件")
+        a.equal(1, SurgeonPredicateCases.compoundHits, "predicate =matches && range && !(blacklist) 复合条件")
     }
 
     fun testWhereThisRef(): CaseResult = runCase("where-this-ref") { a, _ ->
         SurgeonPredicateCases.reset()
         val fx = PredicateFixture()
         fx.log("hi")
-        a.check(SurgeonPredicateCases.thisRefHits >= 1, "where=this is PredicateFixture 通过 thisRef 命中 (hits=${SurgeonPredicateCases.thisRefHits})")
+        a.check(SurgeonPredicateCases.thisRefHits >= 1, "predicate =this is PredicateFixture 通过 thisRef 命中 (hits=${SurgeonPredicateCases.thisRefHits})")
     }
 
     // ---- Trauma 诊断路径（通过反射调用 PredCompiler.compile，模块内 internal 对外可见性差异兜底） ----
@@ -2132,7 +2153,7 @@ object AllCases {
         fx.whereEmpty(1)
         fx.whereEmpty(-1)
         fx.whereEmpty(0)
-        a.equal(3, SurgeonPredicateCases.emptyWhereHits, "where=\"\" 等价于不过滤，所有调用均命中")
+        a.equal(3, SurgeonPredicateCases.emptyWhereHits, "predicate =\"\" 等价于不过滤，所有调用均命中")
     }
 
     fun testWhereOnTrail(): CaseResult = runCase("where-on-trail") { a, _ ->
@@ -2141,7 +2162,7 @@ object AllCases {
         a.equal(20, fx.whereTrail(10), "原方法 *2 仍执行")
         a.equal(-2, fx.whereTrail(-1), "原方法对负数仍执行")
         a.equal(0, fx.whereTrail(0), "原方法 0 出口")
-        a.equal(1, SurgeonPredicateCases.trailWhereHits, "@Trail where=args[0]>0 仅 10 命中")
+        a.equal(1, SurgeonPredicateCases.trailWhereHits, "@Trail predicate =args[0]>0 仅 10 命中")
     }
 
     fun testWhereOnSplice(): CaseResult = runCase("where-on-splice") { a, _ ->
@@ -2155,7 +2176,7 @@ object AllCases {
     fun testWhereOnExcise(): CaseResult = runCase("where-on-excise") { a, _ ->
         SurgeonPredicateCases.resetAdviceWhere()
         val fx = PredicateFixture()
-        a.equal("raw:keep", fx.whereExcise("keep"), "where=cut 不通过 → 原方法执行")
+        a.equal("raw:keep", fx.whereExcise("keep"), "predicate =cut 不通过 → 原方法执行")
         a.equal("excised", fx.whereExcise("cut"), "where 通过 → @Excise 整段替换")
         a.equal(1, SurgeonPredicateCases.exciseWhereHits, "@Excise where 仅 cut 命中")
     }

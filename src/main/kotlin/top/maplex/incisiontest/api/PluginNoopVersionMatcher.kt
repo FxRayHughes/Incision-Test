@@ -15,7 +15,7 @@ import taboolib.module.incision.api.VersionMatcher
  * 导致运行时 ClassNotFound（incision 模块由 IsolatedClassLoader 加载，未被相对重定位）。
  *
  * 用本类即可绕过：
- *   `@Version(matcher = "top.maplex.incisiontest.api.PluginNoopVersionMatcher")`
+ *   `@Version(matcher = top.maplex.incisiontest.api.PluginNoopVersionMatcher::class)`
  */
 object PluginNoopVersionMatcher : VersionMatcher {
     override fun current(): String? = NoopVersionMatcher.current()

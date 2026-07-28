@@ -11,6 +11,9 @@ import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.item.enchantment.ItemEnchantments
 import org.apache.commons.lang3.mutable.MutableFloat
 import taboolib.module.incision.annotation.Operation
+import taboolib.module.incision.annotation.Pointcut
+import taboolib.module.incision.annotation.Selector
+import taboolib.module.incision.annotation.SelectorKind
 import taboolib.module.incision.annotation.Splice
 import taboolib.module.incision.annotation.Surgeon
 import taboolib.module.incision.api.Theatre
@@ -34,16 +37,18 @@ import taboolib.module.incision.api.Theatre
  *   - 其他附魔原样保留
  */
 
-private const val MODIFY_DAMAGE =
-    "method:net.minecraft.world.item.enchantment.EnchantmentHelper#modifyDamage(net.minecraft.server.level.ServerLevel,net.minecraft.world.item.ItemStack,net.minecraft.world.entity.Entity,net.minecraft.world.damagesource.DamageSource,float)float"
-
 // ============================================================
 //  观察者：拿到锋利的真实伤害贡献（不修改任何值）
 // ============================================================
 @Surgeon
 object SharpnessObserver {
 
-    @Splice(scope = MODIFY_DAMAGE)
+    @Splice(pointcut = Pointcut(anyOf = [Selector(
+        kind = SelectorKind.METHOD,
+        owner = "net/minecraft/world/item/enchantment/EnchantmentHelper",
+        name = "modifyDamage",
+        descriptor = "(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;F)F",
+    )]))
     fun observeSharpness(theatre: Theatre): Any? {
         val serverLevel = theatre.arg<ServerLevel>(0) ?: return theatre.resume.proceed()
         val itemStack = theatre.arg<ItemStack>(1) ?: return theatre.resume.proceed()
@@ -92,7 +97,12 @@ object SharpnessModifier {
         2.0f + 1.5f * (level - 1)
     }
 
-    @Splice(scope = MODIFY_DAMAGE)
+    @Splice(pointcut = Pointcut(anyOf = [Selector(
+        kind = SelectorKind.METHOD,
+        owner = "net/minecraft/world/item/enchantment/EnchantmentHelper",
+        name = "modifyDamage",
+        descriptor = "(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;F)F",
+    )]))
     @Operation(id = "sharpness-modifier", enabled = true)
     fun modifySharpness(theatre: Theatre): Any? {
         val serverLevel = theatre.arg<ServerLevel>(0) ?: return theatre.resume.proceed()

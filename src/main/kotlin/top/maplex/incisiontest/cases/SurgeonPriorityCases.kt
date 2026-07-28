@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Surgeon
 import taboolib.module.incision.api.Theatre
@@ -24,7 +32,7 @@ private const val PFIX = "top.maplex.incisiontest.fixture.SurgeonPriorityFixture
 /** 默认 priority —— 不显式写 priority 字段 */
 @Surgeon
 object SurgeonPriorityDefaultCases {
-    @Lead(scope = "method:$PFIX#pSharedTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$PFIX", name = "pSharedTarget", descriptor = "()Ljava/util/List;")]))
     fun adviceDefault(theatre: Theatre) {
         SurgeonPriorityShared.log += "default"
     }
@@ -33,7 +41,7 @@ object SurgeonPriorityDefaultCases {
 /** 显式 priority = 0 */
 @Surgeon(priority = 0)
 object SurgeonPriorityZeroCases {
-    @Lead(scope = "method:$PFIX#pSharedTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$PFIX", name = "pSharedTarget", descriptor = "()Ljava/util/List;")]))
     fun adviceZero(theatre: Theatre) {
         SurgeonPriorityShared.log += "zero"
     }
@@ -42,7 +50,7 @@ object SurgeonPriorityZeroCases {
 /** 正 priority = 30 */
 @Surgeon(priority = 30)
 object SurgeonPriorityPositiveCases {
-    @Lead(scope = "method:$PFIX#pSharedTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$PFIX", name = "pSharedTarget", descriptor = "()Ljava/util/List;")]))
     fun advicePositive(theatre: Theatre) {
         SurgeonPriorityShared.log += "positive-30"
     }
@@ -51,7 +59,7 @@ object SurgeonPriorityPositiveCases {
 /** 负 priority = -10 */
 @Surgeon(priority = -10)
 object SurgeonPriorityNegativeCases {
-    @Lead(scope = "method:$PFIX#pSharedTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$PFIX", name = "pSharedTarget", descriptor = "()Ljava/util/List;")]))
     fun adviceNegative(theatre: Theatre) {
         SurgeonPriorityShared.log += "negative-10"
     }

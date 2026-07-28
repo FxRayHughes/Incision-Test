@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Bypass
 import taboolib.module.incision.annotation.Graft
 import taboolib.module.incision.annotation.Site
@@ -31,12 +39,13 @@ object SurgeonSiteCases {
     @Volatile var trimArgHits = 0
 
     /** @Graft —— INVOKE 锚点 BEFORE：在调用 helper 之前触发 */
-    @Graft(
-        method = "$FIX#invokeHelper(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "invokeHelper", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helper", descriptor = "(I)I"),
             shift = Shift.BEFORE,
+            ordinal = -1,
+            maxMatches = -1,
         ),
     )
     fun graftBeforeHelperInvoke(theatre: Theatre) {
@@ -44,12 +53,13 @@ object SurgeonSiteCases {
     }
 
     /** @Graft —— INVOKE 锚点 AFTER：在调用 helper 之后触发 */
-    @Graft(
-        method = "$FIX#invokeHelper(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "invokeHelper", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helper", descriptor = "(I)I"),
             shift = Shift.AFTER,
+            ordinal = -1,
+            maxMatches = -1,
         ),
     )
     fun graftAfterHelperInvoke(theatre: Theatre) {
@@ -57,11 +67,10 @@ object SurgeonSiteCases {
     }
 
     /** @Graft —— FIELD_GET：读取 counter 时触发 */
-    @Graft(
-        method = "$FIX#readCounter()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "readCounter", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.FIELD_GET,
-            target = "$FIX#counter:int",
+            target = Selector(kind = SelectorKind.FIELD, owner = "$FIX", name = "counter", descriptor = "I"),
         ),
     )
     fun graftOnFieldGet(theatre: Theatre) {
@@ -69,11 +78,10 @@ object SurgeonSiteCases {
     }
 
     /** @Graft —— FIELD_PUT：写 counter 时触发 */
-    @Graft(
-        method = "$FIX#writeCounter(int)V",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "writeCounter", descriptor = "(I)V")]),
         site = Site(
             anchor = Anchor.FIELD_PUT,
-            target = "$FIX#counter:int",
+            target = Selector(kind = SelectorKind.FIELD, owner = "$FIX", name = "counter", descriptor = "I"),
         ),
     )
     fun graftOnFieldPut(theatre: Theatre) {
@@ -81,11 +89,10 @@ object SurgeonSiteCases {
     }
 
     /** @Graft —— NEW：构造 StringBuilder 时触发 */
-    @Graft(
-        method = "$FIX#allocate()java.lang.StringBuilder",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "allocate", descriptor = "()Ljava/lang/StringBuilder;")]),
         site = Site(
             anchor = Anchor.NEW,
-            target = "java.lang.StringBuilder",
+            target = Selector(kind = SelectorKind.CLASS, owner = "java/lang/StringBuilder"),
         ),
     )
     fun graftOnNew(theatre: Theatre) {
@@ -93,8 +100,7 @@ object SurgeonSiteCases {
     }
 
     /** @Graft —— THROW：抛异常时触发 */
-    @Graft(
-        method = "$FIX#throwIt()java.lang.String",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "throwIt", descriptor = "()Ljava/lang/String;")]),
         site = Site(anchor = Anchor.THROW),
     )
     fun graftOnThrow(theatre: Theatre) {
@@ -102,11 +108,12 @@ object SurgeonSiteCases {
     }
 
     /** @Bypass —— 替换 invokeHelper 内对 helper 的调用 */
-    @Bypass(
-        method = "$FIX#invokeHelper(int)int",
+    @Bypass(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "invokeHelper", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helper", descriptor = "(I)I"),
+            ordinal = -1,
+            maxMatches = -1,
         ),
     )
     fun bypassHelperInvoke(theatre: Theatre): Any? {
@@ -116,8 +123,7 @@ object SurgeonSiteCases {
     }
 
     /** @Trim RETURN —— 把 plainReturn 的返回值改写 */
-    @Trim(
-        method = "$FIX#plainReturn()int",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "plainReturn", descriptor = "()I")]),
         kind = Trim.Kind.RETURN,
     )
     fun trimReturnPlain(theatre: Theatre): Any? {
@@ -126,8 +132,7 @@ object SurgeonSiteCases {
     }
 
     /** @Trim ARG —— 把 echo 的参数 msg 改写 */
-    @Trim(
-        method = "$FIX#echo(java.lang.String)java.lang.String",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "echo", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]),
         kind = Trim.Kind.ARG,
         index = 0,
     )

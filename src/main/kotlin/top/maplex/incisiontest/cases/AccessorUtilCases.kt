@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Surgeon
 import taboolib.module.incision.api.*
@@ -35,7 +43,7 @@ object AccessorUtilCases {
     @Volatile var lastCallMethodOnArg: String? = null
     @Volatile var lastWriteFieldVerify: String? = null
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.UtilFixture#process(java.lang.String,int,java.lang.Object)java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/UtilFixture", name = "process", descriptor = "(Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;")]))
     fun onProcess(t: Theatre) {
         // ---- arg ----
         lastArgString = t.arg<String>(0)

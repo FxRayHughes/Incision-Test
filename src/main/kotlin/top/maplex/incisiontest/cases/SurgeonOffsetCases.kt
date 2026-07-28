@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Graft
 import taboolib.module.incision.annotation.Site
 import taboolib.module.incision.annotation.Surgeon
@@ -63,11 +71,10 @@ object SurgeonOffsetCases {
         fieldPutOffsetHits = 0
     }
 
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chain()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chain", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = 0
         )
@@ -76,11 +83,10 @@ object SurgeonOffsetCases {
         ordinal0Hits++
     }
 
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chain()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chain", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = 1
         )
@@ -89,11 +95,10 @@ object SurgeonOffsetCases {
         ordinal1Hits++
     }
 
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chain()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chain", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = 2
         )
@@ -102,11 +107,10 @@ object SurgeonOffsetCases {
         ordinal2Hits++
     }
 
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chain()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chain", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.AFTER,
             ordinal = 0,
             offset = 1
@@ -119,11 +123,10 @@ object SurgeonOffsetCases {
     // ---- 新增 ----
 
     /** offset=0：等价于直接锚定，作对照用。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chain()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chain", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = 0,
             offset = 0
@@ -134,13 +137,13 @@ object SurgeonOffsetCases {
     }
 
     /** AFTER 方向 + offset=+1 在带 gap 的目标方法中对所有 ordinal 命中。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chainWithGap()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chainWithGap", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.AFTER,
             ordinal = -1,
+            maxMatches = -1,
             offset = 1
         )
     )
@@ -149,13 +152,13 @@ object SurgeonOffsetCases {
     }
 
     /** AFTER 方向 + offset=+2。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chainWithGap()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chainWithGap", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.AFTER,
             ordinal = -1,
+            maxMatches = -1,
             offset = 2
         )
     )
@@ -164,13 +167,13 @@ object SurgeonOffsetCases {
     }
 
     /** BEFORE 方向 + offset=-1 (向前回退 1 条指令)。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chainWithGap()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chainWithGap", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = -1,
+            maxMatches = -1,
             offset = -1
         )
     )
@@ -179,11 +182,10 @@ object SurgeonOffsetCases {
     }
 
     /** ordinal=0 + AFTER + offset=+1 联合。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chainWithGap()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chainWithGap", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.AFTER,
             ordinal = 0,
             offset = 1
@@ -194,11 +196,10 @@ object SurgeonOffsetCases {
     }
 
     /** ordinal=2 + AFTER + offset=+2 联合。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chainWithGap()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chainWithGap", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.AFTER,
             ordinal = 2,
             offset = 2
@@ -209,13 +210,13 @@ object SurgeonOffsetCases {
     }
 
     /** ordinal=-1：所有 helper 调用都命中。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chain()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chain", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.BEFORE,
-            ordinal = -1
+            ordinal = -1,
+            maxMatches = -1,
         )
     )
     fun onAnyOrdinal(theatre: Theatre) {
@@ -225,11 +226,10 @@ object SurgeonOffsetCases {
     // ---- 追加：更多 offset / shift 组合 ----
 
     /** offset=+5 大跳（可能越界或命中远处指令）。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chainWithGap()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chainWithGap", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.AFTER,
             ordinal = 0,
             offset = 5
@@ -240,11 +240,10 @@ object SurgeonOffsetCases {
     }
 
     /** offset=-2 回退 2 条。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chainWithGap()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chainWithGap", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = 1,
             offset = -2
@@ -255,13 +254,13 @@ object SurgeonOffsetCases {
     }
 
     /** shift=BEFORE + offset=+2（四组合之一）。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chainWithGap()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chainWithGap", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = -1,
+            maxMatches = -1,
             offset = 2
         )
     )
@@ -270,13 +269,13 @@ object SurgeonOffsetCases {
     }
 
     /** shift=AFTER + offset=0（四组合之二）。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chain()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chain", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.AFTER,
             ordinal = -1,
+            maxMatches = -1,
             offset = 0
         )
     )
@@ -285,11 +284,10 @@ object SurgeonOffsetCases {
     }
 
     /** ordinal=1 + AFTER + offset=+1 交叉组合。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chainWithGap()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chainWithGap", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.AFTER,
             ordinal = 1,
             offset = 1
@@ -300,11 +298,10 @@ object SurgeonOffsetCases {
     }
 
     /** FIELD_GET 锚点 + offset=+1：在读 counter 之后偏移 1 条指令。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chainWithGap()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chainWithGap", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.FIELD_GET,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#counter:int",
+            target = Selector(kind = SelectorKind.FIELD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "counter", descriptor = "I"),
             shift = Shift.AFTER,
             ordinal = 0,
             offset = 1
@@ -315,11 +312,10 @@ object SurgeonOffsetCases {
     }
 
     /** FIELD_PUT 锚点 + BEFORE + offset=0 基线。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.OffsetFixture#chainWithGap()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "chainWithGap", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.FIELD_PUT,
-            target = "top.maplex.incisiontest.fixture.OffsetFixture#counter:int",
+            target = Selector(kind = SelectorKind.FIELD, owner = "top/maplex/incisiontest/fixture/OffsetFixture", name = "counter", descriptor = "I"),
             shift = Shift.BEFORE,
             ordinal = 0,
             offset = 0

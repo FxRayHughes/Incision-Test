@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Bypass
 import taboolib.module.incision.annotation.Excise
 import taboolib.module.incision.annotation.Graft
@@ -46,88 +54,81 @@ object SurgeonAnchorMatrixSiteCases {
 
     // ---- anchor × 8 ----
 
-    @Lead(scope = "method:$FIX#siteHeadMethod()java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteHeadMethod", descriptor = "()Ljava/lang/String;")]))
     fun anchorHead(theatre: Theatre) { headHits++ }
 
-    @Trail(scope = "method:$FIX#siteTailMethod()java.lang.String", onThrow = false)
+    @Trail(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteTailMethod", descriptor = "()Ljava/lang/String;")]), onThrow = false)
     fun anchorTail(theatre: Theatre) { tailHits++ }
 
-    @Graft(
-        method = "$FIX#siteReturnMethod()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteReturnMethod", descriptor = "()I")]),
         site = Site(anchor = Anchor.RETURN),
     )
     fun anchorReturn(theatre: Theatre) { returnHits++ }
 
-    @Graft(
-        method = "$FIX#siteThrowMethod()java.lang.String",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteThrowMethod", descriptor = "()Ljava/lang/String;")]),
         site = Site(anchor = Anchor.THROW),
     )
     fun anchorThrow(theatre: Theatre) { throwHits++ }
 
     // ---- INVOKE × ordinal ----
 
-    @Graft(
-        method = "$FIX#siteInvokeChain(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteInvokeChain", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperSite(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperSite", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = 0,
         ),
     )
     fun siteInvokeOrd0(theatre: Theatre) { invokeOrd0Hits++ }
 
-    @Graft(
-        method = "$FIX#siteInvokeChain(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteInvokeChain", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperSite(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperSite", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = 1,
         ),
     )
     fun siteInvokeOrd1(theatre: Theatre) { invokeOrd1Hits++ }
 
-    @Graft(
-        method = "$FIX#siteInvokeChain(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteInvokeChain", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperSite(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperSite", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = 2,
         ),
     )
     fun siteInvokeOrd2(theatre: Theatre) { invokeOrd2Hits++ }
 
-    @Graft(
-        method = "$FIX#siteInvokeChain(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteInvokeChain", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperSite(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperSite", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = -1,
+            maxMatches = -1,
         ),
     )
     fun siteInvokeOrdAll(theatre: Theatre) { invokeOrdAllHits++ }
 
     // ---- INVOKE × shift BEFORE/AFTER on offset baseline ----
 
-    @Graft(
-        method = "$FIX#siteOffsetBaseline(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteOffsetBaseline", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperSite(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperSite", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             offset = 0,
         ),
     )
     fun siteShiftBefore(theatre: Theatre) { invokeBeforeHits++ }
 
-    @Graft(
-        method = "$FIX#siteOffsetBaseline(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteOffsetBaseline", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperSite(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperSite", descriptor = "(I)I"),
             shift = Shift.AFTER,
             offset = 0,
         ),
@@ -136,52 +137,47 @@ object SurgeonAnchorMatrixSiteCases {
 
     // ---- FIELD_GET / FIELD_PUT ----
 
-    @Graft(
-        method = "$FIX#siteFieldGet()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteFieldGet", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.FIELD_GET,
-            target = "$FIX#counter:int",
+            target = Selector(kind = SelectorKind.FIELD, owner = "$FIX", name = "counter", descriptor = "I"),
         ),
     )
     fun siteFieldGetGraft(theatre: Theatre) { fieldGetHits++ }
 
-    @Graft(
-        method = "$FIX#siteFieldPut(int)V",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteFieldPut", descriptor = "(I)V")]),
         site = Site(
             anchor = Anchor.FIELD_PUT,
-            target = "$FIX#lastWritten:int",
+            target = Selector(kind = SelectorKind.FIELD, owner = "$FIX", name = "lastWritten", descriptor = "I"),
         ),
     )
     fun siteFieldPutGraft(theatre: Theatre) { fieldPutHits++ }
 
     // ---- NEW × target 填 / 空 ----
 
-    @Graft(
-        method = "$FIX#siteNewObject()java.lang.StringBuilder",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteNewObject", descriptor = "()Ljava/lang/StringBuilder;")]),
         site = Site(
             anchor = Anchor.NEW,
-            target = "java.lang.StringBuilder",
+            target = Selector(kind = SelectorKind.CLASS, owner = "java/lang/StringBuilder"),
         ),
     )
     fun siteNewWithTarget(theatre: Theatre) { newWithTargetHits++ }
 
     /** target 留空 —— 期望匹配方法内任意 NEW 指令 */
-    @Graft(
-        method = "$FIX#siteTargetEmpty()java.lang.Object",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteTargetEmpty", descriptor = "()Ljava/lang/Object;")]),
         site = Site(
             anchor = Anchor.NEW,
-            target = "",
+            target = Selector(),
         ),
     )
     fun siteNewEmptyTarget(theatre: Theatre) { newEmptyTargetHits++ }
 
     // ---- offset=0 基线 ----
 
-    @Graft(
-        method = "$FIX#siteOffsetBaseline(int)int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "siteOffsetBaseline", descriptor = "(I)I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "$FIX#helperSite(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "helperSite", descriptor = "(I)I"),
             shift = Shift.BEFORE,
             ordinal = 0,
             offset = 0,

@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Splice
 import taboolib.module.incision.annotation.Surgeon
@@ -51,64 +59,64 @@ object SurgeonVersionCases {
 
     // ---- 基础 A+B+C（保留） ----
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#versionedTarget()java.lang.String")
-    @Version(start = "1.8", end = "1.16")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "versionedTarget", descriptor = "()Ljava/lang/String;")]))
+    @Version(start = "1.8", end = "1.17")
     fun onLegacy(theatre: Theatre) { legacyHits++ }
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#versionedTarget()java.lang.String")
-    @Version(start = "1.17", end = "1.21")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "versionedTarget", descriptor = "()Ljava/lang/String;")]))
+    @Version(start = "1.17", end = "26.1")
     fun onModern(theatre: Theatre) { modernHits++ }
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#versionedTarget()java.lang.String")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "versionedTarget", descriptor = "()Ljava/lang/String;")]))
     @Version(start = "26.1")
     fun onFuture(theatre: Theatre) { futureHits++ }
 
-    @Splice(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#noopMatcherTarget()java.lang.String")
-    @Version(matcher = "top.maplex.incisiontest.api.PluginNoopVersionMatcher")
+    @Splice(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "noopMatcherTarget", descriptor = "()Ljava/lang/String;")]))
+    @Version(matcher = top.maplex.incisiontest.api.PluginNoopVersionMatcher::class)
     fun onNoop(theatre: Theatre): String? {
         noopHits++
         return "noop-replaced"
     }
 
-    @Lead(scope = "method:net.minecraft.server.MinecraftServer#getPlayerCount()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "net/minecraft/server/MinecraftServer", name = "getPlayerCount", descriptor = "()I")]))
     fun onNmsGetPlayerCount(theatre: Theatre) { nmsRemapHits++ }
 
     // ---- #16 扩展：FakeVersionMatcher("2.5") 驱动的边界覆盖 ----
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#fakeMatcherInRange()java.lang.String")
-    @Version(start = "2.0", end = "3.0", matcher = "top.maplex.incisiontest.api.FakeVersionMatcher")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "fakeMatcherInRange", descriptor = "()Ljava/lang/String;")]))
+    @Version(start = "2.0", end = "3.0", matcher = top.maplex.incisiontest.api.FakeVersionMatcher::class)
     fun onFakeInRange(theatre: Theatre) { fakeInRangeHits++ }
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#fakeMatcherBelowStart()java.lang.String")
-    @Version(start = "3.0", end = "4.0", matcher = "top.maplex.incisiontest.api.FakeVersionMatcher")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "fakeMatcherBelowStart", descriptor = "()Ljava/lang/String;")]))
+    @Version(start = "3.0", end = "4.0", matcher = top.maplex.incisiontest.api.FakeVersionMatcher::class)
     fun onFakeBelowStart(theatre: Theatre) { fakeBelowStartHits++ }
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#fakeMatcherAboveEnd()java.lang.String")
-    @Version(start = "0.1", end = "1.0", matcher = "top.maplex.incisiontest.api.FakeVersionMatcher")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "fakeMatcherAboveEnd", descriptor = "()Ljava/lang/String;")]))
+    @Version(start = "0.1", end = "1.0", matcher = top.maplex.incisiontest.api.FakeVersionMatcher::class)
     fun onFakeAboveEnd(theatre: Theatre) { fakeAboveEndHits++ }
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#fakeMatcherBoundaryEnd()java.lang.String")
-    @Version(end = "2.5", matcher = "top.maplex.incisiontest.api.FakeVersionMatcher")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "fakeMatcherBoundaryEnd", descriptor = "()Ljava/lang/String;")]))
+    @Version(end = "2.5", matcher = top.maplex.incisiontest.api.FakeVersionMatcher::class)
     fun onFakeBoundaryEnd(theatre: Theatre) { fakeBoundaryEndHits++ }
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#fakeMatcherBoundaryStart()java.lang.String")
-    @Version(start = "2.5", matcher = "top.maplex.incisiontest.api.FakeVersionMatcher")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "fakeMatcherBoundaryStart", descriptor = "()Ljava/lang/String;")]))
+    @Version(start = "2.5", matcher = top.maplex.incisiontest.api.FakeVersionMatcher::class)
     fun onFakeBoundaryStart(theatre: Theatre) { fakeBoundaryStartHits++ }
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#missingMatcherFallback()java.lang.String")
-    @Version(matcher = "top.maplex.incisiontest.api.ThisMatcherDoesNotExist")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "missingMatcherFallback", descriptor = "()Ljava/lang/String;")]))
+    @Version(matcher = top.maplex.incisiontest.api.FailingVersionMatcher::class)
     fun onMissingMatcherFallback(theatre: Theatre) { missingMatcherHits++ }
 
     // 同名多版本：三段区间挂同一目标，仅 current="2.5" 命中中段
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#multiRangeByIndex()java.lang.String")
-    @Version(start = "0", end = "1", matcher = "top.maplex.incisiontest.api.FakeVersionMatcher")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "multiRangeByIndex", descriptor = "()Ljava/lang/String;")]))
+    @Version(start = "0", end = "1", matcher = top.maplex.incisiontest.api.FakeVersionMatcher::class)
     fun onMultiRange0(theatre: Theatre) { multiRangeIdx0Hits++ }
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#multiRangeByIndex()java.lang.String")
-    @Version(start = "2", end = "3", matcher = "top.maplex.incisiontest.api.FakeVersionMatcher")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "multiRangeByIndex", descriptor = "()Ljava/lang/String;")]))
+    @Version(start = "2", end = "3", matcher = top.maplex.incisiontest.api.FakeVersionMatcher::class)
     fun onMultiRange1(theatre: Theatre) { multiRangeIdx1Hits++ }
 
-    @Lead(scope = "method:top.maplex.incisiontest.fixture.SurgeonVersionTargetFixture#multiRangeByIndex()java.lang.String")
-    @Version(start = "4", end = "5", matcher = "top.maplex.incisiontest.api.FakeVersionMatcher")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/SurgeonVersionTargetFixture", name = "multiRangeByIndex", descriptor = "()Ljava/lang/String;")]))
+    @Version(start = "4", end = "5", matcher = top.maplex.incisiontest.api.FakeVersionMatcher::class)
     fun onMultiRange2(theatre: Theatre) { multiRangeIdx2Hits++ }
 }

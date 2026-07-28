@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Surgeon
 import taboolib.module.incision.annotation.Trim
 import taboolib.module.incision.api.Theatre
@@ -30,8 +38,7 @@ object SurgeonAnchorMatrixTrimCases {
 
     // ---- ARG × index ----
 
-    @Trim(
-        method = "$FIX#trimSingleArg(java.lang.String)java.lang.String",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "trimSingleArg", descriptor = "(Ljava/lang/String;)Ljava/lang/String;")]),
         kind = Trim.Kind.ARG,
         index = 0,
     )
@@ -40,8 +47,7 @@ object SurgeonAnchorMatrixTrimCases {
         return "single-trimmed"
     }
 
-    @Trim(
-        method = "$FIX#trimDoubleArg(java.lang.String,java.lang.String)java.lang.String",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "trimDoubleArg", descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;")]),
         kind = Trim.Kind.ARG,
         index = 0,
     )
@@ -50,8 +56,7 @@ object SurgeonAnchorMatrixTrimCases {
         return "left-trimmed"
     }
 
-    @Trim(
-        method = "$FIX#trimDoubleArg(java.lang.String,java.lang.String)java.lang.String",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "trimDoubleArg", descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;")]),
         kind = Trim.Kind.ARG,
         index = 1,
     )
@@ -60,8 +65,7 @@ object SurgeonAnchorMatrixTrimCases {
         return "right-trimmed"
     }
 
-    @Trim(
-        method = "$FIX#trimTripleArg(java.lang.String,java.lang.String,java.lang.String)java.lang.String",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "trimTripleArg", descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;")]),
         kind = Trim.Kind.ARG,
         index = 2,
     )
@@ -70,8 +74,7 @@ object SurgeonAnchorMatrixTrimCases {
         return "triple-2-trimmed"
     }
 
-    @Trim(
-        method = "$FIX#trimQuadArg(java.lang.String,java.lang.String,java.lang.String,java.lang.String)java.lang.String",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "trimQuadArg", descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;")]),
         kind = Trim.Kind.ARG,
         index = 3,
     )
@@ -82,8 +85,7 @@ object SurgeonAnchorMatrixTrimCases {
 
     // ---- RETURN × 类型 ----
 
-    @Trim(
-        method = "$FIX#trimReturnInt()int",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "trimReturnInt", descriptor = "()I")]),
         kind = Trim.Kind.RETURN,
     )
     fun trimReturnInt(theatre: Theatre): Any? {
@@ -91,8 +93,7 @@ object SurgeonAnchorMatrixTrimCases {
         return -10
     }
 
-    @Trim(
-        method = "$FIX#trimReturnLong()long",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "trimReturnLong", descriptor = "()J")]),
         kind = Trim.Kind.RETURN,
     )
     fun trimReturnLong(theatre: Theatre): Any? {
@@ -100,8 +101,7 @@ object SurgeonAnchorMatrixTrimCases {
         return -100L
     }
 
-    @Trim(
-        method = "$FIX#trimReturnString()java.lang.String",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "trimReturnString", descriptor = "()Ljava/lang/String;")]),
         kind = Trim.Kind.RETURN,
     )
     fun trimReturnString(theatre: Theatre): Any? {
@@ -109,8 +109,7 @@ object SurgeonAnchorMatrixTrimCases {
         return "trimmed-string"
     }
 
-    @Trim(
-        method = "$FIX#trimReturnBoolean()boolean",
+    @Trim(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "trimReturnBoolean", descriptor = "()Z")]),
         kind = Trim.Kind.RETURN,
     )
     fun trimReturnBool(theatre: Theatre): Any? {

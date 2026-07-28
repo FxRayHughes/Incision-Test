@@ -8,7 +8,17 @@ import top.maplex.incisiontest.fixture.TargetFixture
  *
  * 每个 case 返回一个 [CaseResult]，由 [TestRunner] 汇总输出。
  */
-data class CaseResult(val name: String, val ok: Boolean, val detail: String, val ms: Long)
+data class CaseResult(
+    val name: String,
+    val ok: Boolean,
+    val detail: String,
+    val ms: Long,
+    /** 不适用是环境能力边界，不得折算为通过。 */
+    val applicable: Boolean = true,
+)
+
+/** 为缺少目标插件或版本不具备目标方法的场景生成独立结果。 */
+fun notApplicableCase(name: String, reason: String): CaseResult = CaseResult(name, false, reason, 0, applicable = false)
 
 class Asserts {
     private val lines = StringBuilder()
@@ -92,18 +102,24 @@ object TestRunner {
     }
 
     private fun report(sender: ProxyCommandSender, results: List<CaseResult>) {
-        val pass = results.count { it.ok }
-        val fail = results.size - pass
+        val pass = results.count { it.applicable && it.ok }
+        val fail = results.count { it.applicable && !it.ok }
+        val notApplicable = results.count { !it.applicable }
         sender.sendMessage("§6============ §eIncision Test §6============")
         for (r in results) {
-            val tag = if (r.ok) "§aPASS" else "§cFAIL"
+            val tag = when {
+                !r.applicable -> "§eNOT_APPLICABLE"
+                r.ok -> "§aPASS"
+                else -> "§cFAIL"
+            }
             val doc = CaseDocs.of(r.name)
             // 控制台只展示一句 summary，优点与局限仅保留在源码文档中。
             sender.sendMessage("$tag §f${r.name.padEnd(26)} §7${r.ms}ms §8- ${doc.summary}")
             if (!r.ok && r.detail.isNotBlank()) {
-                r.detail.lines().forEach { sender.sendMessage("  §c$it") }
+                val color = if (r.applicable) "§c" else "§e"
+                r.detail.lines().forEach { sender.sendMessage("  $color$it") }
             }
         }
-        sender.sendMessage("§6结果: §a$pass pass §7/ §c$fail fail §7/ §f${results.size} total")
+        sender.sendMessage("§6结果: §a$pass pass §7/ §c$fail fail §7/ §e$notApplicable not-applicable §7/ §f${results.size} total")
     }
 }

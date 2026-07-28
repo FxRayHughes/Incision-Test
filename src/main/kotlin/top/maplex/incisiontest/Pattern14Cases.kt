@@ -91,7 +91,8 @@ object Pattern14Cases {
     fun testInsnPatternInvokeVirtualGlob(): CaseResult = runCase("insn-pattern-invokevirtual-glob") { a, _ ->
         SurgeonInsnPatternCases.reset()
         ComplexOpcodeFixture().buildBuffer()
-        a.check(SurgeonInsnPatternCases.invokeVirtualGlobHits >= 2, "append 至少命中 2 次")
+        // InsnPattern 是宿主方法过滤器，不按内部匹配片段重复执行 advice。
+        a.equal(1, SurgeonInsnPatternCases.invokeVirtualGlobHits, "append 模式筛选宿主后 advice 执行 1 次")
     }
 
     fun testInsnPatternInvokeStatic(): CaseResult = runCase("insn-pattern-invokestatic") { a, _ ->
@@ -240,13 +241,19 @@ object Pattern14Cases {
             Op.GETFIELD, Op.PUTFIELD, Op.NEW, Op.NEWARRAY, Op.ANEWARRAY, Op.ATHROW,
             Op.CHECKCAST, Op.INSTANCEOF, Op.IFEQ, Op.GOTO, Op.RETURN
         )
-        // incision 模块直接依赖 ASM，运行时必然加载得到
-        val opcodesCls = Class.forName("org.objectweb.asm.Opcodes")
+        // ASM 在 TabooLib 插件中会被隔离/重定位，测试不能假设未重定位 FQCN 对插件可见。
+        // 这里对照 JVM 规范中的固定 opcode 值，验证公共 Op 协议本身。
+        val expected = mapOf(
+            "NOP" to 0, "ICONST_0" to 3, "ICONST_1" to 4, "ICONST_2" to 5,
+            "ICONST_3" to 6, "ICONST_4" to 7, "ICONST_5" to 8, "LDC" to 18,
+            "INVOKEVIRTUAL" to 182, "INVOKESPECIAL" to 183, "INVOKESTATIC" to 184,
+            "INVOKEINTERFACE" to 185, "GETFIELD" to 180, "PUTFIELD" to 181, "NEW" to 187,
+            "NEWARRAY" to 188, "ANEWARRAY" to 189, "ATHROW" to 191, "CHECKCAST" to 192,
+            "INSTANCEOF" to 193, "IFEQ" to 153, "GOTO" to 167, "RETURN" to 177,
+        )
         var matched = 0
         for (op in samples) {
-            val field = opcodesCls.getDeclaredField(op.name)
-            val v = field.getInt(null)
-            a.equal(v, op.opcode, "Op.${op.name}.opcode 与 ASM Opcodes.${op.name} 一致")
+            a.equal(expected.getValue(op.name), op.opcode, "Op.${op.name}.opcode 与 JVM 规范一致")
             matched++
         }
         a.check(matched >= 20, "至少抽样 20 个 Op 与 ASM 对齐 (matched=$matched)")
@@ -258,26 +265,26 @@ object Pattern14Cases {
     fun testInsnPatternEmptySteps(): CaseResult = runCase("insn-pattern-empty-steps") { a, _ ->
         SurgeonInsnPatternCases.reset()
         ComplexOpcodeFixture().emptyBody()
-        // OpcodeSeqMatcher.match: `if (seq.isEmpty()) continue` —— 空 steps 永不命中
-        a.equal(0, SurgeonInsnPatternCases.emptyStepsHits, "空 steps 数组永不产生 MatchEvent")
+        // v2 中空 steps 表示未启用 pattern，因此 advice 按宿主 pointcut 正常执行一次。
+        a.equal(1, SurgeonInsnPatternCases.emptyStepsHits, "空 steps 不启用 pattern 过滤")
     }
 
     fun testInsnPatternSeq5(): CaseResult = runCase("insn-pattern-seq5") { a, _ ->
         SurgeonInsnPatternCases.reset()
         ComplexOpcodeFixture().densePattern()
-        a.check(SurgeonInsnPatternCases.seq5Hits >= 1, "5 步序列命中")
+        a.equal(1, SurgeonInsnPatternCases.seq5Hits, "5 步子序列筛选宿主后触发一次")
     }
 
     fun testInsnPatternRepeat2(): CaseResult = runCase("insn-pattern-repeat2") { a, _ ->
         SurgeonInsnPatternCases.reset()
         ComplexOpcodeFixture().multiFieldPut()
-        a.check(SurgeonInsnPatternCases.repeat2Hits >= 1, "PUTFIELD repeat=2 命中")
+        a.equal(1, SurgeonInsnPatternCases.repeat2Hits, "PUTFIELD repeat=2 子序列筛选宿主")
     }
 
     fun testInsnPatternRepeat5(): CaseResult = runCase("insn-pattern-repeat5") { a, _ ->
         SurgeonInsnPatternCases.reset()
         ComplexOpcodeFixture().multiFieldPut()
-        a.check(SurgeonInsnPatternCases.repeat5Hits >= 1, "PUTFIELD repeat=5 命中")
+        a.equal(1, SurgeonInsnPatternCases.repeat5Hits, "PUTFIELD repeat=5 子序列筛选宿主")
     }
 
     fun testInsnPatternCstNumeric(): CaseResult = runCase("insn-pattern-cst-numeric") { a, _ ->
@@ -289,7 +296,7 @@ object Pattern14Cases {
     fun testInsnPatternGlobOwnerJavaLang(): CaseResult = runCase("insn-pattern-glob-owner-javalang") { a, _ ->
         SurgeonInsnPatternCases.reset()
         ComplexOpcodeFixture().staticCalls()
-        a.check(SurgeonInsnPatternCases.globOwnerJavaLangHits >= 2, "glob 匹配 Math 两次调用")
+        a.equal(1, SurgeonInsnPatternCases.globOwnerJavaLangHits, "glob 命中宿主后 advice 只触发一次")
     }
 
     fun testInsnPatternGlobNameSuffix(): CaseResult = runCase("insn-pattern-glob-name-suffix") { a, _ ->
@@ -309,7 +316,7 @@ object Pattern14Cases {
     fun testInsnPatternDescExact(): CaseResult = runCase("insn-pattern-desc-exact") { a, _ ->
         SurgeonInsnPatternCases.reset()
         ComplexOpcodeFixture().staticCalls()
-        a.check(SurgeonInsnPatternCases.descExactHits >= 2, "desc 精确匹配 Math.max/min")
+        a.equal(1, SurgeonInsnPatternCases.descExactHits, "desc 精确命中宿主后 advice 只触发一次")
     }
 
     fun testInsnPatternInvokeInterface(): CaseResult = runCase("insn-pattern-invokeinterface") { a, _ ->
@@ -327,7 +334,7 @@ object Pattern14Cases {
     fun testInsnPatternArrayLength(): CaseResult = runCase("insn-pattern-arraylength") { a, _ ->
         SurgeonInsnPatternCases.reset()
         ComplexOpcodeFixture().arrays()
-        a.check(SurgeonInsnPatternCases.arrayLengthHits >= 1, "ARRAYLENGTH repeat=2 命中")
+        a.equal(1, SurgeonInsnPatternCases.arrayLengthHits, "ARRAYLENGTH repeat=2 子序列筛选宿主")
     }
 
     fun testInsnPatternNop(): CaseResult = runCase("insn-pattern-nop") { a, _ ->

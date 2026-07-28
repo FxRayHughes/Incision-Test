@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Graft
 import taboolib.module.incision.annotation.InsnPattern
 import taboolib.module.incision.annotation.Lead
@@ -38,76 +46,73 @@ object SurgeonOpcodeSeqAnchorCases {
     }
 
     /** HEAD 锚点 + 单步 pattern (要求方法体里有 ICONST_5)。 */
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#arithmetic(int)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "arithmetic", descriptor = "(I)I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.ICONST_5)]),
-        where = ""
+        predicate = ""
     )
     fun onHeadWithPattern(theatre: Theatre) {
         headWithPatternHits++
     }
 
     /** HEAD 锚点 + IFEQ pattern (要求方法体里有跳转)。 */
-    @Lead(
-        scope = "method:top.maplex.incisiontest.fixture.ComplexOpcodeFixture#branch(boolean)int",
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "branch", descriptor = "(Z)I")]),
         pattern = InsnPattern(steps = [Step(opcode = Op.IFEQ)]),
-        where = ""
+        predicate = ""
     )
     fun onHeadPatternIfeq(theatre: Theatre) {
         headPatternIfeqHits++
     }
 
     /** INVOKE 锚点 + target + 显式 INVOKEVIRTUAL pattern。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.ComplexOpcodeFixture#chainInvoke()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "chainInvoke", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.ComplexOpcodeFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.BEFORE,
-            ordinal = -1
+            ordinal = -1,
+            maxMatches = -1,
         ),
         pattern = InsnPattern(
             steps = [
                 Step(opcode = Op.INVOKEVIRTUAL, name = "helper"),
             ]
         ),
-        where = ""
+        predicate = ""
     )
     fun onInvokeWithPattern(theatre: Theatre) {
         invokeWithPatternHits++
     }
 
     /** INVOKE 锚点 + target glob (`*ComplexOpcodeFixture*`) + name pattern。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.ComplexOpcodeFixture#chainInvoke()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "chainInvoke", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "*ComplexOpcodeFixture*#helper(*)*",
+            target = Selector(kind = SelectorKind.METHOD, owner = "*ComplexOpcodeFixture*", name = "helper", descriptor = "(*)*", matchMode = MatchMode.GLOB),
             shift = Shift.BEFORE,
-            ordinal = -1
+            ordinal = -1,
+            maxMatches = -1,
         ),
         pattern = InsnPattern(
             steps = [
                 Step(opcode = Op.INVOKEVIRTUAL, name = "*"),
             ]
         ),
-        where = ""
+        predicate = ""
     )
     fun onInvokeWithGlob(theatre: Theatre) {
         invokeWithGlobHits++
     }
 
     /** INVOKE 锚点 + AFTER + pattern。 */
-    @Graft(
-        method = "top.maplex.incisiontest.fixture.ComplexOpcodeFixture#chainInvoke()int",
+    @Graft(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "chainInvoke", descriptor = "()I")]),
         site = Site(
             anchor = Anchor.INVOKE,
-            target = "top.maplex.incisiontest.fixture.ComplexOpcodeFixture#helper(int)int",
+            target = Selector(kind = SelectorKind.METHOD, owner = "top/maplex/incisiontest/fixture/ComplexOpcodeFixture", name = "helper", descriptor = "(I)I"),
             shift = Shift.AFTER,
             ordinal = 0
         ),
         pattern = InsnPattern(steps = [Step(opcode = Op.INVOKEVIRTUAL, name = "helper")]),
-        where = ""
+        predicate = ""
     )
     fun onInvokeAfterPattern(theatre: Theatre) {
         invokeAfterPatternHits++

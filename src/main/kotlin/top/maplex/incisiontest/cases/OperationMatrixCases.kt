@@ -1,5 +1,13 @@
 package top.maplex.incisiontest.cases
 
+import taboolib.module.incision.annotation.MatchMode
+
+import taboolib.module.incision.annotation.SelectorKind
+
+import taboolib.module.incision.annotation.Selector
+
+import taboolib.module.incision.annotation.Pointcut
+
 import taboolib.module.incision.annotation.Lead
 import taboolib.module.incision.annotation.Operation
 import taboolib.module.incision.annotation.Surgeon
@@ -42,64 +50,64 @@ object OperationMatrixCases {
     val orderLog: MutableList<String> = java.util.Collections.synchronizedList(mutableListOf<String>())
 
     // ---- 1: 完全默认 (基线) ----
-    @Lead(scope = "method:$FIX#m1Default()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "m1Default", descriptor = "()I")]))
     fun adviceM1(theatre: Theatre) { m1Hits++ }
 
     // ---- 2: 仅自定义 id ----
     @Operation(id = "m2-cust")
-    @Lead(scope = "method:$FIX#m2CustomId()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "m2CustomId", descriptor = "()I")]))
     fun adviceM2(theatre: Theatre) { m2Hits++ }
 
     // ---- 3: 仅 enabled=false ----
     @Operation(enabled = false)
-    @Lead(scope = "method:$FIX#m3DisabledNoId()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "m3DisabledNoId", descriptor = "()I")]))
     fun adviceM3(theatre: Theatre) { m3Hits++ }
 
     // ---- 4: 仅 priority 正数 ----
     @Operation(priority = 10)
-    @Lead(scope = "method:$FIX#m4PriorityPositive()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "m4PriorityPositive", descriptor = "()I")]))
     fun adviceM4(theatre: Theatre) { m4Hits++ }
 
     // ---- 5: 仅 priority 负数 ----
     @Operation(priority = -5)
-    @Lead(scope = "method:$FIX#m5PriorityNegative()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "m5PriorityNegative", descriptor = "()I")]))
     fun adviceM5(theatre: Theatre) { m5Hits++ }
 
     // ---- 6: id + 正 priority ----
     @Operation(id = "m6-cust", priority = 20)
-    @Lead(scope = "method:$FIX#m6IdAndPriority()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "m6IdAndPriority", descriptor = "()I")]))
     fun adviceM6(theatre: Theatre) { m6Hits++ }
 
     // ---- 7: id + disabled ----
     @Operation(id = "m7-cust", enabled = false)
-    @Lead(scope = "method:$FIX#m7IdAndDisabled()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "m7IdAndDisabled", descriptor = "()I")]))
     fun adviceM7(theatre: Theatre) { m7Hits++ }
 
     // ---- 8: id + disabled + 高 priority （三维齐全） ----
     @Operation(id = "m8-cust", enabled = false, priority = 99)
-    @Lead(scope = "method:$FIX#m8AllThree()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "m8AllThree", descriptor = "()I")]))
     fun adviceM8(theatre: Theatre) { m8Hits++ }
 
     // ---- 9: 显式 priority=0 + 显式 enabled=true (与默认等价但写明) ----
     @Operation(priority = 0, enabled = true)
-    @Lead(scope = "method:$FIX#m9PriorityZeroExplicit()int")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "m9PriorityZeroExplicit", descriptor = "()I")]))
     fun adviceM9(theatre: Theatre) { m9Hits++ }
 
     // ---- 排序矩阵：高 / 中正 / 0 / 负 ----
     @Operation(priority = 50)
-    @Lead(scope = "method:$FIX#mOrderTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "mOrderTarget", descriptor = "()Ljava/util/List;")]))
     fun orderHigh(theatre: Theatre) { orderLog += "p+50" }
 
     @Operation(priority = 10)
-    @Lead(scope = "method:$FIX#mOrderTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "mOrderTarget", descriptor = "()Ljava/util/List;")]))
     fun orderMid(theatre: Theatre) { orderLog += "p+10" }
 
     @Operation(priority = 0)
-    @Lead(scope = "method:$FIX#mOrderTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "mOrderTarget", descriptor = "()Ljava/util/List;")]))
     fun orderZero(theatre: Theatre) { orderLog += "p+0" }
 
     @Operation(priority = -10)
-    @Lead(scope = "method:$FIX#mOrderTarget()java.util.List")
+    @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "$FIX", name = "mOrderTarget", descriptor = "()Ljava/util/List;")]))
     fun orderLow(theatre: Theatre) { orderLog += "p-10" }
 
     fun reset() {
