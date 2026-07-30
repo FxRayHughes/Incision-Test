@@ -284,6 +284,12 @@ object CaseDocs {
             "描述偏概括，遇到特殊案例仍应补充精确文档。"
         ),
         prefix(
+            "bridge-peer-",
+            { name -> "验证双 Incision 插件 Bridge 场景 `${suffix(name, "bridge-peer-")}`" },
+            "直接覆盖两个插件同一目标的串行 dispatcher 路由与单 lease 卸载隔离。",
+            "会在矩阵末尾禁用 peer；需要重新启动服务端才能再次执行完整生命周期。"
+        ),
+        prefix(
             "cross-cl-",
             { name -> "验证跨 ClassLoader 场景 `${suffix(name, "cross-cl-")}` 的分派行为" },
             "能提前发现 bridge、上下文类加载器和宿主切换问题。",

@@ -56,6 +56,11 @@ object SurgeonCrossClCases {
     @Lead(pointcut = Pointcut(anyOf = [Selector(kind = SelectorKind.METHOD, owner = "org/bukkit/Bukkit", name = "getMaxPlayers", descriptor = "()I")]))
     fun onGetMaxPlayers(theatre: Theatre) {
         getMaxPlayersLeadHits++
+        // 仅集成用例打开标记时记录跨插件顺序，避免普通回归调用污染共享观察值。
+        if (System.getProperty("incision.bridge.sequence.active", "false").toBoolean()) {
+            val sequence = System.getProperty("incision.bridge.sequence", "")
+            System.setProperty("incision.bridge.sequence", listOf(sequence, "main").filter { it.isNotEmpty() }.joinToString(","))
+        }
     }
 
     fun reset() {

@@ -8,6 +8,12 @@ plugins {
 }
 
 taboolib {
+    description {
+        dependencies {
+            // 只约束测试启动顺序；peer 缺失时仍允许主插件加载并给出明确的硬性用例失败。
+            name("Incision-Bridge-Peer").optional(true)
+        }
+    }
     env {
         // 安装模块
         install(Basic, Bukkit, BukkitHook, BukkitNMSUtil,BukkitNMS)

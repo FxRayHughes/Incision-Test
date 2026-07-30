@@ -82,6 +82,7 @@ import top.maplex.incisiontest.cases.AccessorTheatreDslCases
 import top.maplex.incisiontest.cases.AccessorUtilCases
 import top.maplex.incisiontest.cases.AdyeshachIntegrationTests
 import top.maplex.incisiontest.cases.BackendContractCases
+import top.maplex.incisiontest.cases.BridgePeerIntegrationCases
 import top.maplex.incisiontest.fixture.TargetFixture
 
 private const val TARGET = "top.maplex.incisiontest.fixture.TargetFixture"
@@ -520,6 +521,9 @@ object AllCases {
         "util-read-field-on-arg" to ::testUtilReadFieldOnArg,
         "util-call-method-on-arg" to ::testUtilCallMethodOnArg,
         "util-write-field-on-arg" to ::testUtilWriteFieldOnArg,
+        // 必须放在矩阵末尾：第二条用例会主动禁用 peer，避免影响前面的共享目标用例。
+        "bridge-peer-dual-dispatch" to BridgePeerIntegrationCases::testDualDispatch,
+        "bridge-peer-disable-isolation" to BridgePeerIntegrationCases::testDisableIsolation,
     )
 
     // -------- LEAD --------
