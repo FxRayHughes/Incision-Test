@@ -1,6 +1,8 @@
 param(
     [string]$ServerDirectory = "E:\Minecraft-Server\incisionTest\run-26.2-leaf",
     [string]$Java = "D:\Java\zulu25.32.21-ca-jdk25.0.2-win_x64\bin\java.exe",
+    [ValidateSet("jvmti", "instrumentation")]
+    [string]$Backend = "jvmti",
     [int]$TimeoutMinutes = 8
 )
 
@@ -58,7 +60,7 @@ $startInfo.CreateNoWindow = $true
 $startInfo.ArgumentList.Add("-Xms512M")
 $startInfo.ArgumentList.Add("-Xmx1536M")
 $startInfo.ArgumentList.Add("-Dfile.encoding=UTF-8")
-$startInfo.ArgumentList.Add("-Dtaboolib.incision.backend=instrumentation")
+$startInfo.ArgumentList.Add("-Dtaboolib.incision.backend=$Backend")
 $startInfo.ArgumentList.Add("-Djdk.attach.allowAttachSelf=true")
 $startInfo.ArgumentList.Add("-XX:+EnableDynamicAgentLoading")
 $startInfo.ArgumentList.Add("-jar")

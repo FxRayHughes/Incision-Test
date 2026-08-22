@@ -82,6 +82,7 @@ import top.maplex.incisiontest.cases.AccessorTheatreDslCases
 import top.maplex.incisiontest.cases.AccessorUtilCases
 import top.maplex.incisiontest.cases.AdyeshachIntegrationTests
 import top.maplex.incisiontest.cases.BackendContractCases
+import top.maplex.incisiontest.cases.PendingLoadNmsCases
 import top.maplex.incisiontest.cases.BridgePeerIntegrationCases
 import top.maplex.incisiontest.fixture.TargetFixture
 
@@ -116,6 +117,8 @@ object AllCases {
         "backend-transformer-rollback" to BackendContractCases::testTransformerRollback,
         "backend-pipeline-lifecycle" to BackendContractCases::testPipelineLifecycle,
         "backend-classloader-hook-unavailable" to BackendContractCases::testClassLoaderHookUnavailable,
+        "backend-jvmti-pending-nms" to PendingLoadNmsCases::testPendingLoadNms,
+        "backend-jvmti-pending-fixture" to PendingLoadNmsCases::testPendingLoadFixture,
         "lead" to ::testLead,
         "trail" to ::testTrail,
         "trail-throw" to ::testTrailOnThrow,
